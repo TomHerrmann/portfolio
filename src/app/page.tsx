@@ -67,21 +67,14 @@ export default function AboutMePage() {
           </h2>
           <div className="text-gray-300">
             <p className="text-lg leading-relaxed mb-4">
-              Hey! I'm Tom, a software engineer based in New York City with a
-              knack for building scalable web applications and delivering modern
-              UX. My career has been focused on planning and executing
-              full-stack solutions at companies like Meta and Bloomberg, where
-              I've led everything from monorepo refactorings to
-              cross-development of large scale applications. I enjoy taking on
-              technical leadership roles, mentoring junior engineers, and
-              sharing my knowledge through public speaking.
+              {
+                "Hey! I'm Tom, a software engineer based in New York City with a knack for building scalable web applications and delivering modern UX. My career has been focused on planning and executing full-stack solutions at companies like Meta and Bloomberg, where I've led everything from monorepo refactorings to cross-development of large scale applications. I enjoy taking on technical leadership roles, mentoring junior engineers, and sharing my knowledge through public speaking."
+              }
             </p>
             <p className="text-lg leading-relaxed">
-              Beyond my professional work, I'm passionate about film and
-              building community. I founded both Zero Vision Cinema, a pop-up
-              movie theater, and Astoria Horror Club. This passion inspired me
-              to leverage my technical skills to create a custom event ticketing
-              system for ZVC, which helps us put on unique film screenings.
+              {
+                "Beyond my professional work, I'm passionate about film and building community. I founded both Zero Vision Cinema, a pop-up movie theater, and Astoria Horror Club. This passion inspired me to leverage my technical skills to create a custom event ticketing system for ZVC, which helps us put on unique film screenings."
+              }
             </p>
           </div>
           <div className="flex gap-8">
