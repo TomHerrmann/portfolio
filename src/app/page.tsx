@@ -1,103 +1,105 @@
-import Image from "next/image";
+import React from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { MdOutlineMail } from 'react-icons/md';
+import { HiOutlinePhone } from 'react-icons/hi2';
 
-export default function Home() {
+import { RiLinkedinBoxLine } from 'react-icons/ri';
+
+export default function AboutMePage() {
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <main className="min-h-screen w-full flex items-start">
+      <div className="relative w-full max-w-6xl mx-auto flex flex-col md:flex-row items-start justify-center gap-10">
+        {/* Left: Image & Contact Info Section */}
+        <section className="flex-1 flex flex-col items-start justify-start w-full md:p-10 text-center">
+          <Image
+            src="/me.png"
+            alt="Thomas Herrmann"
+            className="object-cover w-full h-auto rounded-x2 shadow-lg mb-6 max-w-sm"
+            width={250}
+            height={250}
+            priority
+          />
+          <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white mb-2">
+            Thomas Herrmann
+          </h1>
+          <h2 className="text-2xl font-bold text-sky-700 dark:text-sky-300 mb-4">
+            Software Engineer
+          </h2>
+          <div className="flex flex-col items-start justify-start gap-2 text-lg text-gray-800 dark:text-gray-200">
+            <Link
+              href="tel:+16316813233"
+              passHref
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex flex-row items-center gap-2 hover:text-sky-500"
+            >
+              <HiOutlinePhone className="h-8 w-8" />
+              <span>631-681-3233</span>
+            </Link>
+            <Link
+              href="mailto:tomherrmannd@gmail.com"
+              passHref
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex flex-row items-center gap-2 hover:text-sky-500"
+            >
+              <MdOutlineMail className="h-8 w-8" />
+              <span>tomherrmannd@gmail.com</span>
+            </Link>
+            <Link
+              href="https://linkedin.com/in/thomasherrmann1/"
+              passHref
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex flex-row items-center gap-2 hover:text-sky-500"
+            >
+              <RiLinkedinBoxLine className="h-8 w-8" />
+              <span>LinkedIn</span>
+            </Link>
+          </div>
+        </section>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+        {/* Right: About Me Section */}
+        <section className="flex-1 flex flex-col items-start justify-start gap-8 w-full h-full md:p-10 md:pt-12">
+          <h2 className="text-3xl font-extrabold text-gray-900 dark:text-white">
+            About Me
+          </h2>
+          <div className="text-gray-300">
+            <p className="text-lg leading-relaxed mb-4">
+              Hey! I'm Tom, a software engineer based in New York City with a
+              knack for building scalable web applications and delivering modern
+              UX. My career has been focused on planning and executing
+              full-stack solutions at companies like Meta and Bloomberg, where
+              I've led everything from monorepo refactorings to
+              cross-development of large scale applications. I enjoy taking on
+              technical leadership roles, mentoring junior engineers, and
+              sharing my knowledge through public speaking.
+            </p>
+            <p className="text-lg leading-relaxed">
+              Beyond my professional work, I'm passionate about film and
+              building community. I founded both Zero Vision Cinema, a pop-up
+              movie theater, and Astoria Horror Club. This passion inspired me
+              to leverage my technical skills to create a custom event ticketing
+              system for ZVC, which helps us put on unique film screenings.
+            </p>
+          </div>
+          <div className="flex gap-8">
+            <Link
+              href="/resume"
+              className="px-6 py-2 rounded-lg text-white border-1 border-white font-semibold shadow hover:bg-sky-700 transition-colors"
+            >
+              View Resume
+            </Link>
+            <Link
+              href="https://www.zerovisioncinema.com"
+              className="px-6 py-2 rounded-lg text-white border-1 border-white font-semibold shadow hover:bg-sky-700 transition-colors"
+            >
+              View ZVC
+            </Link>
+          </div>
+        </section>
+      </div>
+    </main>
   );
 }
