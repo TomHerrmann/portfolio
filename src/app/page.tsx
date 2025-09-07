@@ -3,19 +3,19 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { MdOutlineMail } from 'react-icons/md';
 import { HiOutlinePhone } from 'react-icons/hi2';
-
 import { RiLinkedinBoxLine } from 'react-icons/ri';
+import { RxGithubLogo } from 'react-icons/rx';
 
 export default function AboutMePage() {
   return (
     <main className="min-h-screen w-full flex items-start">
-      <div className="relative w-full max-w-6xl mx-auto flex flex-col md:flex-row items-start justify-center gap-10">
+      <div className="relative w-full max-w-6xl mx-auto flex flex-col md:flex-row items-center md:items-start justify-center gap-10">
         {/* Left: Image & Contact Info Section */}
         <section className="flex-1 flex flex-col items-start justify-start w-full md:p-10 text-center">
           <Image
             src="/me.png"
             alt="Thomas Herrmann"
-            className="object-cover w-full h-auto rounded-x2 shadow-lg mb-6 max-w-sm"
+            className="object-cover w-full h-auto m-auto md:m-0 rounded-x2 shadow-lg mb-6 max-w-sm"
             width={250}
             height={250}
             priority
@@ -56,6 +56,16 @@ export default function AboutMePage() {
             >
               <RiLinkedinBoxLine className="h-8 w-8" />
               <span>LinkedIn</span>
+            </Link>
+            <Link
+              href="https://github.com/TomHerrmann"
+              passHref
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex flex-row items-center gap-2 hover:text-sky-500"
+            >
+              <RxGithubLogo className="h-8 w-8" />
+              <span>GitHub</span>
             </Link>
           </div>
         </section>
