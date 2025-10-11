@@ -9,7 +9,7 @@ export const resumeData = {
   },
   skills: {
     languages:
-      'React, Next, JavaScript/TypeScript, GraphQL/Relay, ReactQuery, Redux, Node.js, Express.js, PHP, Python, SQL',
+      'JavaScript/TypeSscript, React, Next, Python, GraphQL, ReactQuery, Redux, Node.js, Express.js, PHP, SQL',
     tools:
       'AWS, Vercel, CSS/Tailwind/Styled-Components, Jest/React Testing Library, Chronos, Jenkins, Webpack, Babel',
   },
