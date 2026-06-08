@@ -9,7 +9,7 @@ export const resumeData = {
   },
   skills: {
     languages:
-      'JavaScript/TypeSscript, React, Next, Python, GraphQL, ReactQuery, Redux, Node.js, Express.js, PHP, SQL',
+      'JavaScript/TypeSscript, React, Next, Python, GraphQL, ReactQuery, Redux, Node.js, Express.js, PHP , SQL',
     tools:
       'AWS, Vercel, CSS/Tailwind/Styled-Components, Jest/React Testing Library, Chronos, Jenkins, Webpack, Babel',
   },
@@ -19,12 +19,13 @@ export const resumeData = {
       title: 'Senior Software Engineer',
       dates: '2023-Current',
       bullets: [
-        'Architected a secure system for attaching thousands of legal documents to internal tickets, ensuring compliance with regulatory standards.',
-        'Spearheaded the refactoring of a monorepo into federated modules, significantly accelerating sub-application development across teams.',
-        'Developed the runtime environment and infrastructure for the Chromium-based Terminal browser, supporting 10,000+ unique applications.',
-        'Migrated the Terminal to a multi-process model (browser/renderer separation) to enhance application reliability, efficiency, and security.',
-        'Led a cross-functional initiative to create a direct endpoint for Launchpad components, eliminating dependencies and resolving bugs.',
-        'Served technical lead for frontend development, authoring documentation, mentoring junior engineers, and delivering talks on best practices.',
+        'Spearheaded the design and execution of a centralized secure attachment system, mitigating a critical unauthorized access risk for legal contracts across the Bloomberg ecosystem.',
+        'Engineered a custom RBAC and audit logging layer to ensure regulatory compliance, transitioning the organization from open internal access to a strictly governed, "least-privileged" read/write model.',
+        'Architected a Federated Module architecture for contracts portal (9 sub-apps), decoupling deployment cycles for 5 pods and eliminating unintentional cross-team rollbacks.',
+        'Established the "Golden Path" migration playbook, enabling 20+ engineers to transition to independent release cycles, reducing deployment friction and eliminating the need for pre-release coordination between pods.',
+        'Founded and chaired the Web Application Security Guild, establishing the organization-wide "Web App Security Best Practices" and evangelized these strategies across the firm through technical presentations.',
+        'Operationalized a security on-call rotation, providing proactive code audits and vulnerability assessments to standardize security posture across all web properties.',
+        'Served as the technical lead for web development, setting best practices, advocating for new technologies, and authoring documentation.',
       ],
     },
     {
@@ -49,7 +50,6 @@ export const resumeData = {
         'Developed a PHP/Hack script to securely enable cross-platform posting from email to Workplace via a customized Chronos job.',
         'Crafted a breadcrumbs component for seamless user navigation through projects within the Unigraph dashboard.',
         'Contributed to the design and development of the modernized Unigraph dashboard and its UI components.',
-        'Maintained comprehensive testing coverage across JavaScript and Hack codebases.',
       ],
     },
     {
@@ -77,6 +77,7 @@ export const resumeData = {
     {
       name: 'Zero Vision Cinema',
       url: 'zerovisioncinema.com',
+      dates: '2025-Current',
       bullets: [
         'Engineered a full-stack event ticketing system using Next.js and Payload CMS, deployed via Vercel’s global edge network, and built with Shadcn and Tailwind CSS to create a modern user interface.',
         'Integrated Stripe webhooks to manage secure ticket payments and leveraged Resend API to automate ticket delivery via emails, creating a seamless end-to-end user experience.',
@@ -124,6 +125,7 @@ export type Experience = {
 export type Project = {
   name: string;
   url: string;
+  dates?: string;
   bullets: string[];
 };
 

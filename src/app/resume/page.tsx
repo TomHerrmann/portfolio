@@ -50,25 +50,32 @@ const ExperienceItem = ({
 const ProjectItem = ({
   name,
   url,
+  dates,
   bullets,
 }: {
   name: string;
   url: string;
+  dates?: string;
   bullets: string[];
 }) => (
   <div className="mb-4">
-    <div className="flex justify-start items-center mb-1 gap-4">
-      <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-        {name}
-      </h3>
-      <a
-        href={`https://${url}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="text-sm text-sky-600 hover:underline"
-      >
-        {url}
-      </a>
+    <div className="flex justify-between items-center mb-1">
+      <div className="flex items-center gap-4">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+          {name}
+        </h3>
+        <a
+          href={`https://${url}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-sm text-sky-600 hover:underline"
+        >
+          {url}
+        </a>
+      </div>
+      {dates && (
+        <span className="text-sm text-sky-700 dark:text-sky-300">{dates}</span>
+      )}
     </div>
     <ul className="list-disc list-inside space-y-1 text-gray-800 dark:text-gray-200">
       {bullets.map((bullet, index) => (
