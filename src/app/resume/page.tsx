@@ -10,12 +10,19 @@ const Section = ({
   title: string;
   children: React.ReactNode;
 }) => (
-  <section className="mb-6">
-    <h2 className="text-xl font-bold border-b-2 border-sky-300 pb-1 mb-2 text-gray-900 dark:text-white">
-      {title}
-    </h2>
+  <section className="mb-10">
+    <h2 className="zvc-heading text-2xl sm:text-3xl mb-2">{title}</h2>
+    <span className="zvc-rule mb-5" aria-hidden="true" />
     {children}
   </section>
+);
+
+const Bullets = ({ bullets }: { bullets: string[] }) => (
+  <ul className="list-disc marker:text-blue-light pl-5 space-y-1.5 zvc-body text-base sm:text-lg leading-snug">
+    {bullets.map((bullet, index) => (
+      <li key={index}>{bullet}</li>
+    ))}
+  </ul>
 );
 
 const ExperienceItem = ({
@@ -29,21 +36,17 @@ const ExperienceItem = ({
   dates: string;
   bullets: string[];
 }) => (
-  <div className="mb-4">
-    <div className="flex justify-between items-start mb-1">
-      <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+  <div className="mb-8 last:mb-0">
+    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-baseline gap-1 mb-2">
+      <h3 className="font-display uppercase text-2xl text-glow">
         {company}{' '}
-        <span className="text-sm font-normal text-sky-700 dark:text-sky-300">
-          - {title}
+        <span className="font-utility text-sm text-retro-blue tracking-[0.15em]">
+          / {title}
         </span>
       </h3>
-      <span className="text-sm text-sky-700 dark:text-sky-300">{dates}</span>
+      <span className="zvc-badge self-start sm:self-auto">{dates}</span>
     </div>
-    <ul className="list-disc list-inside space-y-1 text-gray-800 dark:text-gray-200">
-      {bullets.map((bullet, index) => (
-        <li key={index}>{bullet}</li>
-      ))}
-    </ul>
+    <Bullets bullets={bullets} />
   </div>
 );
 
@@ -58,34 +61,26 @@ const ProjectItem = ({
   dates?: string;
   bullets: string[];
 }) => (
-  <div className="mb-4">
-    <div className="flex justify-between items-center mb-1">
-      <div className="flex items-center gap-4">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-          {name}
-        </h3>
+  <div className="mb-6 last:mb-0">
+    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-baseline gap-1 mb-2">
+      <div className="flex flex-wrap items-baseline gap-x-4">
+        <h3 className="font-display uppercase text-2xl text-glow">{name}</h3>
         <a
           href={`https://${url}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-sm text-sky-600 hover:underline"
+          className="zvc-link text-blue-light"
         >
           {url}
         </a>
       </div>
       {dates && (
-        <span className="text-sm text-sky-700 dark:text-sky-300">{dates}</span>
+        <span className="zvc-badge self-start sm:self-auto">{dates}</span>
       )}
     </div>
-    <ul className="list-disc list-inside space-y-1 text-gray-800 dark:text-gray-200">
-      {bullets.map((bullet, index) => (
-        <li key={index}>{bullet}</li>
-      ))}
-    </ul>
+    <Bullets bullets={bullets} />
   </div>
 );
-
-const TalkItem = ({ talk }: { talk: string }) => <li>{talk}</li>;
 
 const EducationItem = ({
   institution,
@@ -94,41 +89,45 @@ const EducationItem = ({
   institution: string;
   degree: string;
 }) => (
-  <div className="mb-2">
-    <h3 className="font-semibold text-gray-900 dark:text-white">
-      {institution}
-    </h3>
-    <p className="text-gray-800 dark:text-gray-200">{degree}</p>
+  <div className="mb-3">
+    <h3 className="font-display uppercase text-lg text-glow">{institution}</h3>
+    <p className="zvc-body text-lg">{degree}</p>
   </div>
 );
 
 export default function ResumePage() {
   return (
-    <div className="relative min-h-screen w-full flex items-center justify-center overflow-x-hidden bg-gradient-to-br from-sky-100 via-white to-indigo-200 dark:from-gray-900 dark:via-gray-800 dark:to-sky-900">
-      <Link href="/">
-        <MdArrowBack className="absolute top-6 left-8 h-8 w-8 text-gray-900 dark:text-white transition-colors duration-200 hover:text-sky-700" />
-      </Link>
-      <div className="relative w-full max-w-4xl bg-white/80 dark:bg-gray-900/80 backdrop-blur-md rounded-2xl shadow-5xl p-6 m-4 sm:p-10 md:p-14 border-4 border-gray-200 dark:border-gray-700">
+    <div className="relative w-full flex flex-col items-center">
+      <div className="w-full max-w-4xl mb-6">
+        <Link
+          href="/"
+          aria-label="Back to home"
+          className="zvc-icon-frame h-10 w-10 hover:bg-blue-light/25 transition-colors"
+        >
+          <MdArrowBack className="h-5 w-5" />
+        </Link>
+      </div>
+      <div className="w-full max-w-4xl p-6 sm:p-10 md:p-14 bg-card border-2 border-glow/15 shadow-[6px_6px_0_0_rgba(0,0,0,0.55)]">
         {/* Header Section */}
-        <header className="mb-8 text-center flex flex-col items-center">
-          <h1 className="text-4xl sm:text-5xl font-extrabold text-gray-900 dark:text-white tracking-tight drop-shadow-lg">
+        <header className="mb-12 text-center flex flex-col items-center">
+          <h1 className="zvc-heading text-5xl sm:text-6xl">
             {resumeData.header.name}
           </h1>
-          <h2 className="text-2xl sm:text-3xl font-bold text-sky-700 dark:text-sky-300 mt-2">
+          <p className="zvc-kicker text-sm sm:text-base mt-4">
             {resumeData.header.title}
-          </h2>
-          <div className="mt-4 text-gray-800 dark:text-gray-200 text-base flex flex-col sm:flex-row justify-center items-center space-y-1 sm:space-y-0 sm:space-x-4">
+          </p>
+          <div className="mt-6 zvc-body text-base flex flex-col sm:flex-row flex-wrap justify-center items-center gap-y-1 sm:gap-x-4">
             <span>{resumeData.header.location}</span>
-            <span className="hidden sm:inline">|</span>
+            <span className="hidden sm:inline text-blue-light">/</span>
             <span>{resumeData.header.phone}</span>
-            <span className="hidden sm:inline">|</span>
+            <span className="hidden sm:inline text-blue-light">/</span>
             <span>{resumeData.header.email}</span>
-            <span className="hidden sm:inline">|</span>
+            <span className="hidden sm:inline text-blue-light">/</span>
             <a
               href={`https://${resumeData.header.linkedin}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:underline text-sky-600 dark:text-sky-400 font-medium"
+              className="zvc-link text-blue-light"
             >
               {resumeData.header.linkedin}
             </a>
@@ -136,48 +135,42 @@ export default function ResumePage() {
         </header>
 
         {/* Technical Skills Section */}
-        <Section title="TECHNICAL SKILLS">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-gray-700 dark:text-gray-200">
-            <div className="bg-sky-50 dark:bg-gray-800 rounded-lg p-4 shadow-sm">
-              <h4 className="font-semibold text-sky-700 dark:text-sky-300 mb-1">
-                Languages & Frameworks:
+        <Section title="Technical Skills">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div className="border-2 border-glow/10 bg-blackout/60 p-4">
+              <h4 className="zvc-kicker text-xs mb-2">
+                Languages & Frameworks
               </h4>
-              <p>{resumeData.skills.languages}</p>
+              <p className="zvc-body text-lg">{resumeData.skills.languages}</p>
             </div>
-            <div className="bg-sky-50 dark:bg-gray-800 rounded-lg p-4 shadow-sm">
-              <h4 className="font-semibold text-sky-700 dark:text-sky-300 mb-1">
-                Cloud & Tools:
-              </h4>
-              <p>{resumeData.skills.tools}</p>
+            <div className="border-2 border-glow/10 bg-blackout/60 p-4">
+              <h4 className="zvc-kicker text-xs mb-2">Cloud & Tools</h4>
+              <p className="zvc-body text-lg">{resumeData.skills.tools}</p>
             </div>
           </div>
         </Section>
 
         {/* Work Experience Section */}
-        <Section title="WORK EXPERIENCE">
+        <Section title="Work Experience">
           {resumeData.experience.map((exp, index) => (
             <ExperienceItem key={index} {...exp} />
           ))}
         </Section>
 
         {/* Personal Projects Section */}
-        <Section title="PERSONAL PROJECTS">
+        <Section title="Personal Projects">
           {resumeData.projects.map((proj, index) => (
             <ProjectItem key={index} {...proj} />
           ))}
         </Section>
 
         {/* Selected Talks Section */}
-        <Section title="SELECTED TALKS">
-          <ul className="list-disc list-inside space-y-1 text-gray-700 dark:text-gray-200">
-            {resumeData.talks.map((talk, index) => (
-              <TalkItem key={index} talk={talk} />
-            ))}
-          </ul>
+        <Section title="Selected Talks">
+          <Bullets bullets={resumeData.talks} />
         </Section>
 
         {/* Education & Certificates Section */}
-        <Section title="EDUCATION & CERTIFICATES">
+        <Section title="Education & Certificates">
           {resumeData.education.map((edu, index) => (
             <EducationItem key={index} {...edu} />
           ))}

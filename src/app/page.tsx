@@ -6,97 +6,94 @@ import { HiOutlinePhone } from 'react-icons/hi2';
 import { RiLinkedinBoxLine } from 'react-icons/ri';
 import { RxGithubLogo } from 'react-icons/rx';
 
+const contactLinks = [
+  {
+    href: 'tel:+16316813233',
+    label: '631-681-3233',
+    Icon: HiOutlinePhone,
+  },
+  {
+    href: 'mailto:tomherrmannd@gmail.com',
+    label: 'tomherrmannd@gmail.com',
+    Icon: MdOutlineMail,
+  },
+  {
+    href: 'https://linkedin.com/in/thomasherrmann1/',
+    label: 'LinkedIn',
+    Icon: RiLinkedinBoxLine,
+  },
+  {
+    href: 'https://github.com/TomHerrmann',
+    label: 'GitHub',
+    Icon: RxGithubLogo,
+  },
+];
+
 export default function AboutMePage() {
   return (
-    <main className="min-h-screen w-full flex items-start">
-      <div className="relative w-full max-w-6xl mx-auto flex flex-col md:flex-row items-center md:items-start justify-center gap-10">
+    <main className="w-full flex items-start">
+      <div className="relative w-full max-w-6xl mx-auto flex flex-col md:flex-row items-center md:items-start justify-center gap-12">
         {/* Left: Image & Contact Info Section */}
-        <section className="flex-1 flex flex-col items-start justify-start w-full md:p-10 text-center">
-          <Image
-            src="/me.png"
-            alt="Thomas Herrmann"
-            className="object-cover w-full h-auto m-auto md:m-0 rounded-x2 shadow-lg mb-6 max-w-sm"
-            width={250}
-            height={250}
-            priority
-          />
-          <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white mb-2">
+        <section className="flex-1 flex flex-col items-start justify-start w-full max-w-sm md:max-w-none md:p-6">
+          <div className="zvc-card zvc-worn-edge p-2 mb-8 w-full max-w-sm">
+            <Image
+              src="/me.png"
+              alt="Thomas Herrmann"
+              className="object-cover w-full h-auto grayscale-[15%]"
+              width={250}
+              height={250}
+              priority
+            />
+          </div>
+          <h1 className="zvc-heading text-5xl md:text-6xl mb-3">
             Thomas Herrmann
           </h1>
-          <h2 className="text-2xl font-bold text-sky-700 dark:text-sky-300 mb-4">
+          <h2 className="zvc-kicker text-sm md:text-base mb-6">
             Software Engineer
           </h2>
-          <div className="flex flex-col items-start justify-start gap-2 text-lg text-gray-800 dark:text-gray-200">
-            <Link
-              href="tel:+16316813233"
-              passHref
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex flex-row items-center gap-2 hover:text-sky-500"
-            >
-              <HiOutlinePhone className="h-8 w-8" />
-              <span>631-681-3233</span>
-            </Link>
-            <Link
-              href="mailto:tomherrmannd@gmail.com"
-              passHref
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex flex-row items-center gap-2 hover:text-sky-500"
-            >
-              <MdOutlineMail className="h-8 w-8" />
-              <span>tomherrmannd@gmail.com</span>
-            </Link>
-            <Link
-              href="https://linkedin.com/in/thomasherrmann1/"
-              passHref
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex flex-row items-center gap-2 hover:text-sky-500"
-            >
-              <RiLinkedinBoxLine className="h-8 w-8" />
-              <span>LinkedIn</span>
-            </Link>
-            <Link
-              href="https://github.com/TomHerrmann"
-              passHref
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex flex-row items-center gap-2 hover:text-sky-500"
-            >
-              <RxGithubLogo className="h-8 w-8" />
-              <span>GitHub</span>
-            </Link>
-          </div>
+          <span className="zvc-rule mb-8" aria-hidden="true" />
+          <ul className="flex flex-col items-start gap-3 text-lg">
+            {contactLinks.map(({ href, label, Icon }) => (
+              <li key={href}>
+                <Link
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group flex flex-row items-center gap-3 zvc-link"
+                >
+                  <span className="zvc-icon-frame h-10 w-10">
+                    <Icon className="h-5 w-5" />
+                  </span>
+                  <span>{label}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
         </section>
 
         {/* Right: About Me Section */}
-        <section className="flex-1 flex flex-col items-start justify-start gap-8 w-full h-full md:p-10 md:pt-12">
-          <h2 className="text-3xl font-extrabold text-gray-900 dark:text-white">
-            About Me
-          </h2>
-          <div className="text-gray-300">
-            <p className="text-lg leading-relaxed mb-4">
+        <section className="flex-1 flex flex-col items-start justify-start gap-6 w-full md:p-6 md:pt-10">
+          <p className="zvc-kicker text-xs">Now Showing</p>
+          <h2 className="zvc-heading text-4xl md:text-5xl">About Me</h2>
+          <div className="zvc-body text-lg md:text-xl leading-relaxed">
+            <p className="mb-5">
               {
                 "Hey! I'm Tom, a software engineer based in New York City with a knack for building scalable web applications and delivering modern UX. My career has been focused on planning and executing full-stack solutions at companies like Meta and Bloomberg, where I've led everything from monorepo refactorings to cross-development of large scale applications. I enjoy taking on technical leadership roles, mentoring junior engineers, and sharing my knowledge through public speaking."
               }
             </p>
-            <p className="text-lg leading-relaxed">
+            <p>
               {
                 "Beyond my professional work, I'm passionate about film and building community. I founded both Zero Vision Cinema, a pop-up movie theater, and Astoria Horror Club. This passion inspired me to leverage my technical skills to create a custom event ticketing system for ZVC, which helps us put on unique film screenings."
               }
             </p>
           </div>
-          <div className="flex gap-8">
-            <Link
-              href="/resume"
-              className="px-6 py-2 rounded-lg text-white border-1 border-white font-semibold shadow hover:bg-sky-700 transition-colors"
-            >
+          <div className="flex flex-col sm:flex-row gap-4 mt-2">
+            <Link href="/resume" className="zvc-btn">
               View Resume
             </Link>
             <Link
               href="https://www.zerovisioncinema.com"
-              className="px-6 py-2 rounded-lg text-white border-1 border-white font-semibold shadow hover:bg-sky-700 transition-colors"
+              className="zvc-btn-outline"
             >
               View ZVC
             </Link>

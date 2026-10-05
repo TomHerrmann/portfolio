@@ -1,26 +1,167 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
+/* Zero Vision Cinema brand system, ported from the ZVC site
+ * (zero-vision-cinema: app/(frontend)/globals.css). */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --color-card: var(--card);
+
+  /* Brand fonts: font-body, font-display, font-utility */
+  --font-sans: var(--font-crimson), 'Times New Roman', serif;
+  --font-body: var(--font-crimson), 'Times New Roman', serif;
+  --font-display: var(--font-bootzy-condensed), Arial, sans-serif;
+  --font-utility: var(--font-bootzy), Arial, sans-serif;
   --font-mono: var(--font-geist-mono);
+
+  /* Brand palette */
+  --color-blackout: #1f1f1f;
+  --color-glow: #fffdf6;
+  --color-retro-blue: #9eb7cc;
+  --color-blue-light: #4a8cc6;
+  --color-cult-classic: #7f0028;
+  --color-static: #d9dde0;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  --background: var(--color-blackout);
+  --foreground: var(--color-glow);
+  --card: #262626;
+}
+
+@layer base {
+  body {
+    @apply bg-background text-foreground font-body;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  /* --- Type --- */
+  .zvc-heading {
+    @apply font-display uppercase text-glow;
+    line-height: 0.92;
+    letter-spacing: 0.05em;
+  }
+  .font-display {
+    letter-spacing: 0.05em;
+  }
+  .zvc-kicker {
+    @apply font-utility uppercase text-blue-light;
+    letter-spacing: 0.25em;
+  }
+  .zvc-body {
+    @apply font-body text-glow/80;
+  }
+  .zvc-link {
+    @apply text-glow underline decoration-transparent underline-offset-4 transition-colors;
+    @apply hover:text-blue-light hover:decoration-blue-light;
+  }
+
+  /* --- Surfaces --- */
+  .zvc-card {
+    @apply relative bg-card text-glow border-2 border-glow/15;
+    box-shadow: 6px 6px 0 0 rgba(0, 0, 0, 0.55);
+    transition:
+      transform 0.25s ease,
+      box-shadow 0.25s ease,
+      border-color 0.25s ease;
+  }
+  .zvc-card:hover {
+    @apply border-blue-light/50;
+    box-shadow: 8px 8px 0 0 rgba(74, 140, 198, 0.45);
+    transform: translate(-2px, -2px);
+  }
+  .zvc-icon-frame {
+    @apply inline-flex items-center justify-center border-2 border-blue-light/40 bg-blue-light/10 text-blue-light;
+  }
+  .zvc-badge {
+    @apply inline-flex items-center gap-2 border-2 border-blue-light/30 bg-blackout/60 px-3 py-1;
+    @apply font-utility uppercase text-blue-light text-xs;
+    letter-spacing: 0.2em;
+  }
+
+  /* --- Buttons --- */
+  .zvc-btn {
+    @apply inline-flex items-center justify-center gap-2 font-utility uppercase rounded-full;
+    @apply bg-glow text-blackout border-2 border-glow px-6 py-3;
+    letter-spacing: 0.12em;
+    box-shadow: 4px 4px 0 0 rgba(0, 0, 0, 0.5);
+    transition:
+      transform 0.12s ease,
+      box-shadow 0.12s ease,
+      background-color 0.2s ease;
+  }
+  .zvc-btn:hover {
+    @apply bg-glow/90;
+  }
+  .zvc-btn:active {
+    transform: translate(3px, 3px);
+    box-shadow: 1px 1px 0 0 rgba(0, 0, 0, 0.5);
+  }
+  .zvc-btn-outline {
+    @apply inline-flex items-center justify-center gap-2 font-utility uppercase rounded-full;
+    @apply bg-transparent text-glow border-2 border-blue-light px-6 py-3;
+    letter-spacing: 0.12em;
+    transition:
+      transform 0.12s ease,
+      background-color 0.2s ease;
+  }
+  .zvc-btn-outline:hover {
+    @apply bg-blue-light/15;
+  }
+  .zvc-btn-outline:active {
+    transform: translate(2px, 2px);
+  }
+
+  /* --- Accents --- */
+  .zvc-rule {
+    display: block;
+    height: 6px;
+    width: 8rem;
+    background: repeating-linear-gradient(
+      90deg,
+      var(--color-blue-light) 0 14px,
+      transparent 14px 20px
+    );
+  }
+  .zvc-worn-edge {
+    clip-path: polygon(
+      0 4px,
+      4px 0,
+      calc(100% - 5px) 0,
+      100% 6px,
+      100% calc(100% - 4px),
+      calc(100% - 6px) 100%,
+      5px 100%,
+      0 calc(100% - 5px)
+    );
+  }
+}
+
+@layer utilities {
+  /* Wear-and-tear texture overlays: put on an `absolute inset-0 pointer-events-none` layer */
+  .zvc-grain {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    opacity: 0.05;
+  }
+  .zvc-scanlines {
+    background-image: repeating-linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.22) 0 1px,
+      transparent 1px 3px
+    );
+    opacity: 0.5;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }
