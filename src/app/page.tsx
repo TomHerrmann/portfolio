@@ -35,16 +35,14 @@ export default function AboutMePage() {
       <div className="relative w-full max-w-6xl mx-auto flex flex-col md:flex-row items-center md:items-start justify-center gap-12">
         {/* Left: Image & Contact Info Section */}
         <section className="flex-1 flex flex-col items-start justify-start w-full max-w-sm md:max-w-none md:p-6">
-          <div className="zvc-card zvc-worn-edge p-2 mb-8 w-full max-w-sm">
-            <Image
-              src="/me.png"
-              alt="Thomas Herrmann"
-              className="object-cover w-full h-auto grayscale-[15%]"
-              width={250}
-              height={250}
-              priority
-            />
-          </div>
+          <Image
+            src="/me-circle.png"
+            alt="Thomas Herrmann"
+            className="w-full h-auto max-w-xs mb-8 rounded-full"
+            width={320}
+            height={320}
+            priority
+          />
           <h1 className="zvc-heading text-5xl md:text-6xl mb-3">
             Thomas Herrmann
           </h1>
