@@ -1,26 +1,47 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
+/* Fonts and colors from the Zero Vision Cinema brand
+ * (zero-vision-cinema: app/(frontend)/globals.css). */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --color-card: var(--card);
+
+  /* Brand fonts: font-body, font-display, font-utility */
+  --font-sans: var(--font-crimson), 'Times New Roman', serif;
+  --font-body: var(--font-crimson), 'Times New Roman', serif;
+  --font-display: var(--font-bootzy-condensed), Arial, sans-serif;
+  --font-utility: var(--font-bootzy), Arial, sans-serif;
   --font-mono: var(--font-geist-mono);
+
+  /* Brand palette */
+  --color-blackout: #1f1f1f;
+  --color-glow: #fffdf6;
+  --color-retro-blue: #9eb7cc;
+  --color-blue-light: #4a8cc6;
+  --color-cult-classic: #7f0028;
+  --color-static: #d9dde0;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  --background: var(--color-blackout);
+  --foreground: var(--color-glow);
+  --card: #262626;
+}
+
+@layer base {
+  body {
+    @apply bg-background text-foreground font-body;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }

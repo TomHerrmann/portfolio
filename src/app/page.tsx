@@ -1,106 +1,140 @@
-import React from 'react';
-import Link from 'next/link';
 import Image from 'next/image';
-import { MdOutlineMail } from 'react-icons/md';
-import { HiOutlinePhone } from 'react-icons/hi2';
+import Link from 'next/link';
+import { MdArrowOutward, MdOutlineMail } from 'react-icons/md';
 import { RiLinkedinBoxLine } from 'react-icons/ri';
 import { RxGithubLogo } from 'react-icons/rx';
+import { intro, metrics, contact, skills, zvc, zvcStack, resumeData } from './content';
 
-export default function AboutMePage() {
+// Bento grid: the whole story in one screen of tiles a recruiter can scan in seconds.
+const tile =
+  'rounded-3xl bg-card border border-glow/[0.08] p-6 sm:p-7 transition-colors hover:border-blue-light/40';
+
+export default function HomePage() {
   return (
-    <main className="min-h-screen w-full flex items-start">
-      <div className="relative w-full max-w-6xl mx-auto flex flex-col md:flex-row items-center md:items-start justify-center gap-10">
-        {/* Left: Image & Contact Info Section */}
-        <section className="flex-1 flex flex-col items-start justify-start w-full md:p-10 text-center">
-          <Image
-            src="/me.png"
-            alt="Thomas Herrmann"
-            className="object-cover w-full h-auto m-auto md:m-0 rounded-x2 shadow-lg mb-6 max-w-sm"
-            width={250}
-            height={250}
-            priority
-          />
-          <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white mb-2">
-            Thomas Herrmann
-          </h1>
-          <h2 className="text-2xl font-bold text-sky-700 dark:text-sky-300 mb-4">
-            Software Engineer
-          </h2>
-          <div className="flex flex-col items-start justify-start gap-2 text-lg text-gray-800 dark:text-gray-200">
-            <Link
-              href="tel:+16316813233"
-              passHref
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex flex-row items-center gap-2 hover:text-sky-500"
-            >
-              <HiOutlinePhone className="h-8 w-8" />
-              <span>631-681-3233</span>
-            </Link>
-            <Link
-              href="mailto:tomherrmannd@gmail.com"
-              passHref
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex flex-row items-center gap-2 hover:text-sky-500"
-            >
-              <MdOutlineMail className="h-8 w-8" />
-              <span>tomherrmannd@gmail.com</span>
-            </Link>
-            <Link
-              href="https://linkedin.com/in/thomasherrmann1/"
-              passHref
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex flex-row items-center gap-2 hover:text-sky-500"
-            >
-              <RiLinkedinBoxLine className="h-8 w-8" />
-              <span>LinkedIn</span>
-            </Link>
-            <Link
-              href="https://github.com/TomHerrmann"
-              passHref
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex flex-row items-center gap-2 hover:text-sky-500"
-            >
-              <RxGithubLogo className="h-8 w-8" />
-              <span>GitHub</span>
-            </Link>
+    <main className="font-body max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 auto-rows-[minmax(150px,auto)] gap-4">
+        {/* Intro */}
+        <section className={`${tile} sm:col-span-2 lg:row-span-2 flex flex-col justify-between bg-gradient-to-br from-card to-blue-light/15`}>
+          <div className="flex items-center gap-4 mb-8">
+            <Image
+              src="/me-circle.png"
+              alt="Thomas Herrmann"
+              width={88}
+              height={88}
+              priority
+              className="w-20 h-20 rounded-full"
+            />
+            <div>
+              <h1 className="font-display uppercase text-4xl tracking-wide leading-none">Thomas Herrmann</h1>
+              <p className="font-utility uppercase text-xs tracking-[0.2em] text-blue-light mt-2">
+                Senior Software Engineer
+              </p>
+            </div>
+          </div>
+          <p className="text-2xl sm:text-3xl leading-snug text-glow/90">{intro}</p>
+        </section>
+
+        {/* Contact */}
+        <section className={`${tile} flex flex-col justify-between`}>
+          <p className="font-utility uppercase text-xs tracking-[0.2em] text-glow/50">Reach Out</p>
+          <div className="flex flex-col gap-2 mt-4">
+            <a href={`mailto:${contact.email}`} className="flex items-center justify-between rounded-2xl bg-glow text-blackout px-4 py-3 font-utility uppercase text-xs tracking-[0.15em]">
+              Email <MdOutlineMail className="h-5 w-5" />
+            </a>
+            <div className="grid grid-cols-2 gap-2">
+              <a href={contact.linkedin} aria-label="LinkedIn" className="flex items-center justify-center rounded-2xl border border-glow/15 py-3 hover:border-glow/40">
+                <RiLinkedinBoxLine className="h-5 w-5" />
+              </a>
+              <a href={contact.github} aria-label="GitHub" className="flex items-center justify-center rounded-2xl border border-glow/15 py-3 hover:border-glow/40">
+                <RxGithubLogo className="h-5 w-5" />
+              </a>
+            </div>
           </div>
         </section>
 
-        {/* Right: About Me Section */}
-        <section className="flex-1 flex flex-col items-start justify-start gap-8 w-full h-full md:p-10 md:pt-12">
-          <h2 className="text-3xl font-extrabold text-gray-900 dark:text-white">
-            About Me
-          </h2>
-          <div className="text-gray-300">
-            <p className="text-lg leading-relaxed mb-4">
-              {
-                "Hey! I'm Tom, a software engineer based in New York City with a knack for building scalable web applications and delivering modern UX. My career has been focused on planning and executing full-stack solutions at companies like Meta and Bloomberg, where I've led everything from monorepo refactorings to cross-development of large scale applications. I enjoy taking on technical leadership roles, mentoring junior engineers, and sharing my knowledge through public speaking."
-              }
-            </p>
-            <p className="text-lg leading-relaxed">
-              {
-                "Beyond my professional work, I'm passionate about film and building community. I founded both Zero Vision Cinema, a pop-up movie theater, and Astoria Horror Club. This passion inspired me to leverage my technical skills to create a custom event ticketing system for ZVC, which helps us put on unique film screenings."
-              }
-            </p>
+        {/* Resume */}
+        <Link href="/resume" className={`${tile} group flex flex-col justify-between bg-blue-light! border-blue-light!`}>
+          <MdArrowOutward className="h-8 w-8 self-end transition-transform group-hover:-translate-y-1 group-hover:translate-x-1" />
+          <p className="font-display uppercase text-5xl tracking-wide leading-none">Resume</p>
+        </Link>
+
+        {/* Metrics */}
+        {metrics.slice(0, 2).map((m) => (
+          <section key={m.label} className={`${tile} flex flex-col justify-between`}>
+            <p className="font-display text-6xl text-blue-light leading-none">{m.value}</p>
+            <p className="text-base text-glow/65 leading-snug mt-4">{m.label}</p>
+          </section>
+        ))}
+
+        {/* Experience */}
+        <section className={`${tile} sm:col-span-2 lg:row-span-2`}>
+          <p className="font-utility uppercase text-xs tracking-[0.2em] text-glow/50 mb-5">Experience</p>
+          <ul className="divide-y divide-glow/10">
+            {resumeData.experience.map((exp) => (
+              <li key={exp.company + exp.title} className="py-3 flex items-baseline justify-between gap-4">
+                <div>
+                  <p className="font-display uppercase text-2xl tracking-wide leading-tight">{exp.company}</p>
+                  <p className="text-base text-glow/60">{exp.title}</p>
+                </div>
+                <span className="font-utility text-xs tracking-[0.15em] text-retro-blue whitespace-nowrap">
+                  {exp.dates}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        {metrics.slice(2).map((m) => (
+          <section key={m.label} className={`${tile} flex flex-col justify-between`}>
+            <p className="font-display text-6xl text-blue-light leading-none">{m.value}</p>
+            <p className="text-base text-glow/65 leading-snug mt-4">{m.label}</p>
+          </section>
+        ))}
+
+        {/* Skills */}
+        <section className={`${tile} sm:col-span-2`}>
+          <p className="font-utility uppercase text-xs tracking-[0.2em] text-glow/50 mb-4">Stack</p>
+          <div className="flex flex-wrap gap-2">
+            {skills.map((s) => (
+              <span key={s} className="rounded-full border border-glow/15 px-3 py-1 text-sm text-glow/80">
+                {s}
+              </span>
+            ))}
           </div>
-          <div className="flex gap-8">
-            <Link
-              href="/resume"
-              className="px-6 py-2 rounded-lg text-white border-1 border-white font-semibold shadow hover:bg-sky-700 transition-colors"
-            >
-              View Resume
-            </Link>
-            <Link
-              href="https://www.zerovisioncinema.com"
-              className="px-6 py-2 rounded-lg text-white border-1 border-white font-semibold shadow hover:bg-sky-700 transition-colors"
-            >
-              View ZVC
-            </Link>
+        </section>
+
+        {/* Side project */}
+        <a href="https://www.zerovisioncinema.com" className={`${tile} group sm:col-span-2 flex flex-col justify-between`}>
+          <div className="flex items-start justify-between">
+            <p className="font-utility uppercase text-xs tracking-[0.2em] text-glow/50">Side Project</p>
+            <MdArrowOutward className="h-6 w-6 text-blue-light transition-transform group-hover:-translate-y-1 group-hover:translate-x-1" />
           </div>
+          <div>
+            <p className="font-display uppercase text-3xl tracking-wide mt-4">Zero Vision Cinema</p>
+            <p className="text-base text-glow/75 mt-2 mb-3">{zvc.summary}</p>
+            <ul className="list-disc marker:text-blue-light pl-5 space-y-1 text-base text-glow/65 leading-snug mb-4">
+              {zvc.system.map((line) => (
+                <li key={line}>{line}</li>
+              ))}
+            </ul>
+            <div className="flex flex-wrap gap-2">
+              {zvcStack.map((s) => (
+                <span key={s} className="rounded-full bg-blue-light/15 text-blue-light px-3 py-1 text-xs font-utility uppercase tracking-[0.1em]">
+                  {s}
+                </span>
+              ))}
+            </div>
+          </div>
+        </a>
+
+        {/* Talks */}
+        <section className={`${tile} sm:col-span-2`}>
+          <p className="font-utility uppercase text-xs tracking-[0.2em] text-glow/50 mb-4">Talks</p>
+          <ul className="space-y-2 text-lg text-glow/80">
+            {resumeData.talks.map((t) => (
+              <li key={t}>{t}</li>
+            ))}
+          </ul>
         </section>
       </div>
     </main>

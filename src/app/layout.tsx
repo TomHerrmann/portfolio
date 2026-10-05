@@ -1,15 +1,35 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import { Geist_Mono, Crimson_Text } from 'next/font/google';
+import localFont from 'next/font/local';
 import './globals.css';
-
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
-});
 
 const geistMono = Geist_Mono({
   variable: '--font-geist-mono',
   subsets: ['latin'],
+});
+
+// Body copy: Crimson Text (ZVC brand spec)
+const crimsonText = Crimson_Text({
+  weight: ['400', '600'],
+  style: ['normal', 'italic'],
+  subsets: ['latin'],
+  variable: '--font-crimson',
+});
+
+// Headlines: Bootzy Condensed (ZVC brand spec)
+const bootzyCondensed = localFont({
+  src: './fonts/bootzy_condensed_tm-webfont.woff2',
+  variable: '--font-bootzy-condensed',
+  display: 'swap',
+  fallback: ['Arial', 'sans-serif'],
+});
+
+// Labels: Bootzy, used all caps (ZVC brand spec)
+const bootzy = localFont({
+  src: './fonts/bootzy_tm-webfont.woff2',
+  variable: '--font-bootzy',
+  display: 'swap',
+  fallback: ['Arial', 'sans-serif'],
 });
 
 export const metadata: Metadata = {
@@ -26,11 +46,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistMono.variable} ${crimsonText.variable} ${bootzyCondensed.variable} ${bootzy.variable} antialiased`}
       >
-        <div className="p-6 bg-gradient-to-br from-sky-100 via-white to-indigo-200 dark:from-gray-900 dark:via-gray-800 dark:to-sky-900">
-          {children}
-        </div>
+        {children}
       </body>
     </html>
   );
