@@ -24,6 +24,17 @@ export const skills = [
   ...resumeData.skills.tools.split(',').map((s) => s.trim()),
 ];
 
-export const zvcStack = ['Next.js', 'Payload CMS', 'Vercel', 'Stripe', 'Resend', 'Tailwind CSS', 'Shadcn'];
+export const zvcStack = ['Next.js', 'Payload CMS', 'Stripe', 'QStash', 'Resend', 'Vercel'];
+
+// From the zero-vision-cinema README; the events/critic line is Tom's own.
+export const zvc = {
+  summary:
+    'A film screening pop-up in NYC where I run movie events and work as a critic. I also built and run the platform behind it:',
+  system: [
+    'Stripe payments with server-side pricing and double-charge protection',
+    'Queued ticket emails with retries, so no buyer misses a ticket',
+    'CMS admin for events, venues, orders, refunds and check-in',
+  ],
+};
 
 export { resumeData };

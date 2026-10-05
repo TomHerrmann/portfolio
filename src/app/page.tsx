@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { MdArrowOutward, MdOutlineMail } from 'react-icons/md';
 import { RiLinkedinBoxLine } from 'react-icons/ri';
 import { RxGithubLogo } from 'react-icons/rx';
-import { intro, metrics, contact, skills, zvcStack, resumeData } from './content';
+import { intro, metrics, contact, skills, zvc, zvcStack, resumeData } from './content';
 
 // Bento grid: the whole story in one screen of tiles a recruiter can scan in seconds.
 const tile =
@@ -104,7 +104,12 @@ export default function HomePage() {
           </div>
           <div>
             <p className="font-display uppercase text-3xl tracking-wide mt-4">Zero Vision Cinema</p>
-            <p className="text-base text-glow/65 mt-1 mb-3">Full-stack event ticketing system</p>
+            <p className="text-base text-glow/75 mt-2 mb-3">{zvc.summary}</p>
+            <ul className="list-disc marker:text-blue-light pl-5 space-y-1 text-base text-glow/65 leading-snug mb-4">
+              {zvc.system.map((line) => (
+                <li key={line}>{line}</li>
+              ))}
+            </ul>
             <div className="flex flex-wrap gap-2">
               {zvcStack.map((s) => (
                 <span key={s} className="rounded-full bg-blue-light/15 text-blue-light px-3 py-1 text-xs font-utility uppercase tracking-[0.1em]">
