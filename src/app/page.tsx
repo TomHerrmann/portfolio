@@ -84,6 +84,13 @@ export default function HomePage() {
           </ul>
         </section>
 
+        {metrics.slice(2).map((m) => (
+          <section key={m.label} className={`${tile} flex flex-col justify-between`}>
+            <p className="font-display text-6xl text-blue-light leading-none">{m.value}</p>
+            <p className="text-base text-glow/65 leading-snug mt-4">{m.label}</p>
+          </section>
+        ))}
+
         {/* Skills */}
         <section className={`${tile} sm:col-span-2`}>
           <p className="font-utility uppercase text-xs tracking-[0.2em] text-glow/50 mb-4">Stack</p>
@@ -129,13 +136,6 @@ export default function HomePage() {
             ))}
           </ul>
         </section>
-
-        {metrics.slice(2).map((m) => (
-          <section key={m.label} className={`${tile} flex flex-col justify-between`}>
-            <p className="font-display text-6xl text-blue-light leading-none">{m.value}</p>
-            <p className="text-base text-glow/65 leading-snug mt-4">{m.label}</p>
-          </section>
-        ))}
       </div>
     </main>
   );

@@ -10,7 +10,7 @@ export const metrics = [
   { value: '9', label: 'Sub-apps moved to a Federated Module architecture' },
   { value: '5', label: 'Pods given independent deployment cycles' },
   { value: '20+', label: 'Engineers onboarded via the "Golden Path" playbook' },
-  { value: '3', label: 'Tech talks given at Bloomberg and Build With Code NYC' },
+  { value: '0', label: 'Unintentional cross-team rollbacks after the federated split' },
 ];
 
 export const contact = {
