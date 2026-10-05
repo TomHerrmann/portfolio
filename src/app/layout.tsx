@@ -48,18 +48,7 @@ export default function RootLayout({
       <body
         className={`${geistMono.variable} ${crimsonText.variable} ${bootzyCondensed.variable} ${bootzy.variable} antialiased`}
       >
-        {/* Film grain + scanlines, as on zerovisioncinema.com */}
-        <div
-          className="fixed inset-0 zvc-scanlines pointer-events-none"
-          aria-hidden="true"
-        />
-        <div
-          className="fixed inset-0 zvc-grain pointer-events-none"
-          aria-hidden="true"
-        />
-        <div className="relative min-h-screen px-4 py-8 sm:px-6 md:py-12">
-          {children}
-        </div>
+        {children}
       </body>
     </html>
   );

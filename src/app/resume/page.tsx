@@ -3,6 +3,9 @@ import { resumeData } from './resumeData';
 import { MdArrowBack } from 'react-icons/md';
 import Link from 'next/link';
 
+const card = 'rounded-3xl bg-card border border-glow/[0.08] p-6 sm:p-8';
+const label = 'font-utility uppercase text-xs tracking-[0.2em] text-glow/50';
+
 const Section = ({
   title,
   children,
@@ -10,172 +13,155 @@ const Section = ({
   title: string;
   children: React.ReactNode;
 }) => (
-  <section className="mb-10">
-    <h2 className="zvc-heading text-2xl sm:text-3xl mb-2">{title}</h2>
-    <span className="zvc-rule mb-5" aria-hidden="true" />
+  <section className={card}>
+    <h2 className={`${label} mb-6`}>{title}</h2>
     {children}
   </section>
 );
 
 const Bullets = ({ bullets }: { bullets: string[] }) => (
-  <ul className="list-disc marker:text-blue-light pl-5 space-y-1.5 zvc-body text-base sm:text-lg leading-snug">
+  <ul className="list-disc marker:text-blue-light pl-5 space-y-1.5 text-base sm:text-lg text-glow/75 leading-snug">
     {bullets.map((bullet, index) => (
       <li key={index}>{bullet}</li>
     ))}
   </ul>
 );
 
-const ExperienceItem = ({
-  company,
-  title,
-  dates,
-  bullets,
-}: {
-  company: string;
-  title: string;
-  dates: string;
-  bullets: string[];
-}) => (
-  <div className="mb-8 last:mb-0">
-    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-baseline gap-1 mb-2">
-      <h3 className="font-display uppercase text-2xl text-glow">
-        {company}{' '}
-        <span className="font-utility text-sm text-retro-blue tracking-[0.15em]">
-          / {title}
-        </span>
-      </h3>
-      <span className="zvc-badge self-start sm:self-auto">{dates}</span>
-    </div>
-    <Bullets bullets={bullets} />
-  </div>
-);
-
-const ProjectItem = ({
+const ItemHeader = ({
   name,
-  url,
+  sub,
   dates,
-  bullets,
 }: {
-  name: string;
-  url: string;
+  name: React.ReactNode;
+  sub?: string;
   dates?: string;
-  bullets: string[];
 }) => (
-  <div className="mb-6 last:mb-0">
-    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-baseline gap-1 mb-2">
-      <div className="flex flex-wrap items-baseline gap-x-4">
-        <h3 className="font-display uppercase text-2xl text-glow">{name}</h3>
-        <a
-          href={`https://${url}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="zvc-link text-blue-light"
-        >
-          {url}
-        </a>
-      </div>
-      {dates && (
-        <span className="zvc-badge self-start sm:self-auto">{dates}</span>
-      )}
+  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-baseline gap-1 mb-3">
+    <div>
+      <h3 className="font-display uppercase text-2xl tracking-wide leading-tight">
+        {name}
+      </h3>
+      {sub && <p className="text-base text-glow/60">{sub}</p>}
     </div>
-    <Bullets bullets={bullets} />
-  </div>
-);
-
-const EducationItem = ({
-  institution,
-  degree,
-}: {
-  institution: string;
-  degree: string;
-}) => (
-  <div className="mb-3">
-    <h3 className="font-display uppercase text-lg text-glow">{institution}</h3>
-    <p className="zvc-body text-lg">{degree}</p>
+    {dates && (
+      <span className="font-utility text-xs tracking-[0.15em] text-retro-blue whitespace-nowrap">
+        {dates}
+      </span>
+    )}
   </div>
 );
 
 export default function ResumePage() {
   return (
-    <div className="relative w-full flex flex-col items-center">
-      <div className="w-full max-w-4xl mb-6">
-        <Link
-          href="/"
-          aria-label="Back to home"
-          className="zvc-icon-frame h-10 w-10 hover:bg-blue-light/25 transition-colors"
-        >
-          <MdArrowBack className="h-5 w-5" />
-        </Link>
-      </div>
-      <div className="w-full max-w-4xl p-6 sm:p-10 md:p-14 bg-card border-2 border-glow/15 shadow-[6px_6px_0_0_rgba(0,0,0,0.55)]">
-        {/* Header Section */}
-        <header className="mb-12 text-center flex flex-col items-center">
-          <h1 className="zvc-heading text-5xl sm:text-6xl">
-            {resumeData.header.name}
-          </h1>
-          <p className="zvc-kicker text-sm sm:text-base mt-4">
-            {resumeData.header.title}
-          </p>
-          <div className="mt-6 zvc-body text-base flex flex-col sm:flex-row flex-wrap justify-center items-center gap-y-1 sm:gap-x-4">
-            <span>{resumeData.header.location}</span>
-            <span className="hidden sm:inline text-blue-light">/</span>
-            <span>{resumeData.header.phone}</span>
-            <span className="hidden sm:inline text-blue-light">/</span>
-            <span>{resumeData.header.email}</span>
-            <span className="hidden sm:inline text-blue-light">/</span>
-            <a
-              href={`https://${resumeData.header.linkedin}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="zvc-link text-blue-light"
-            >
-              {resumeData.header.linkedin}
-            </a>
-          </div>
-        </header>
+    <main className="font-body max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-10 flex flex-col gap-4">
+      <Link
+        href="/"
+        aria-label="Back to home"
+        className="self-start inline-flex items-center gap-2 rounded-full border border-glow/15 px-4 py-2 font-utility uppercase text-xs tracking-[0.15em] hover:border-glow/40"
+      >
+        <MdArrowBack className="h-4 w-4" /> Home
+      </Link>
 
-        {/* Technical Skills Section */}
-        <Section title="Technical Skills">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            <div className="border-2 border-glow/10 bg-blackout/60 p-4">
-              <h4 className="zvc-kicker text-xs mb-2">
-                Languages & Frameworks
-              </h4>
-              <p className="zvc-body text-lg">{resumeData.skills.languages}</p>
-            </div>
-            <div className="border-2 border-glow/10 bg-blackout/60 p-4">
-              <h4 className="zvc-kicker text-xs mb-2">Cloud & Tools</h4>
-              <p className="zvc-body text-lg">{resumeData.skills.tools}</p>
-            </div>
-          </div>
-        </Section>
+      {/* Header */}
+      <header className={`${card} bg-gradient-to-br from-card to-blue-light/15`}>
+        <h1 className="font-display uppercase text-5xl sm:text-6xl tracking-wide leading-none">
+          {resumeData.header.name}
+        </h1>
+        <p className="font-utility uppercase text-sm tracking-[0.2em] text-blue-light mt-3">
+          {resumeData.header.title}
+        </p>
+        <div className="mt-6 flex flex-wrap gap-2 text-sm">
+          {[
+            resumeData.header.location,
+            resumeData.header.phone,
+            resumeData.header.email,
+          ].map((item) => (
+            <span key={item} className="rounded-full border border-glow/15 px-3 py-1 text-glow/80">
+              {item}
+            </span>
+          ))}
+          <a
+            href={`https://${resumeData.header.linkedin}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded-full bg-blue-light/15 text-blue-light px-3 py-1 hover:bg-blue-light/25"
+          >
+            {resumeData.header.linkedin}
+          </a>
+        </div>
+      </header>
 
-        {/* Work Experience Section */}
-        <Section title="Work Experience">
+      <Section title="Technical Skills">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <h4 className="font-utility uppercase text-xs tracking-[0.15em] text-blue-light mb-2">
+              Languages & Frameworks
+            </h4>
+            <p className="text-lg text-glow/80">{resumeData.skills.languages}</p>
+          </div>
+          <div>
+            <h4 className="font-utility uppercase text-xs tracking-[0.15em] text-blue-light mb-2">
+              Cloud & Tools
+            </h4>
+            <p className="text-lg text-glow/80">{resumeData.skills.tools}</p>
+          </div>
+        </div>
+      </Section>
+
+      <Section title="Work Experience">
+        <div className="divide-y divide-glow/10">
           {resumeData.experience.map((exp, index) => (
-            <ExperienceItem key={index} {...exp} />
+            <div key={index} className="py-6 first:pt-0 last:pb-0">
+              <ItemHeader name={exp.company} sub={exp.title} dates={exp.dates} />
+              <Bullets bullets={exp.bullets} />
+            </div>
           ))}
-        </Section>
+        </div>
+      </Section>
 
-        {/* Personal Projects Section */}
-        <Section title="Personal Projects">
-          {resumeData.projects.map((proj, index) => (
-            <ProjectItem key={index} {...proj} />
-          ))}
-        </Section>
+      <Section title="Personal Projects">
+        {resumeData.projects.map((proj, index) => (
+          <div key={index}>
+            <ItemHeader
+              name={
+                <>
+                  {proj.name}{' '}
+                  <a
+                    href={`https://${proj.url}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-body normal-case text-base tracking-normal text-blue-light hover:underline"
+                  >
+                    {proj.url}
+                  </a>
+                </>
+              }
+              dates={proj.dates}
+            />
+            <Bullets bullets={proj.bullets} />
+          </div>
+        ))}
+      </Section>
 
-        {/* Selected Talks Section */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Section title="Selected Talks">
-          <Bullets bullets={resumeData.talks} />
+          <ul className="space-y-2 text-lg text-glow/80">
+            {resumeData.talks.map((talk) => (
+              <li key={talk}>{talk}</li>
+            ))}
+          </ul>
         </Section>
-
-        {/* Education & Certificates Section */}
         <Section title="Education & Certificates">
-          {resumeData.education.map((edu, index) => (
-            <EducationItem key={index} {...edu} />
-          ))}
+          <div className="space-y-4">
+            {resumeData.education.map((edu) => (
+              <div key={edu.degree}>
+                <h3 className="font-display uppercase text-xl tracking-wide">{edu.institution}</h3>
+                <p className="text-lg text-glow/75">{edu.degree}</p>
+              </div>
+            ))}
+          </div>
         </Section>
       </div>
-    </div>
+    </main>
   );
 }

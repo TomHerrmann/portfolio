@@ -1,102 +1,136 @@
-import React from 'react';
-import Link from 'next/link';
 import Image from 'next/image';
-import { MdOutlineMail } from 'react-icons/md';
-import { HiOutlinePhone } from 'react-icons/hi2';
+import Link from 'next/link';
+import { MdArrowOutward, MdOutlineMail } from 'react-icons/md';
 import { RiLinkedinBoxLine } from 'react-icons/ri';
 import { RxGithubLogo } from 'react-icons/rx';
+import { intro, metrics, contact, skills, zvcStack, resumeData } from './content';
 
-const contactLinks = [
-  {
-    href: 'tel:+16316813233',
-    label: '631-681-3233',
-    Icon: HiOutlinePhone,
-  },
-  {
-    href: 'mailto:tomherrmannd@gmail.com',
-    label: 'tomherrmannd@gmail.com',
-    Icon: MdOutlineMail,
-  },
-  {
-    href: 'https://linkedin.com/in/thomasherrmann1/',
-    label: 'LinkedIn',
-    Icon: RiLinkedinBoxLine,
-  },
-  {
-    href: 'https://github.com/TomHerrmann',
-    label: 'GitHub',
-    Icon: RxGithubLogo,
-  },
-];
+// Bento grid: the whole story in one screen of tiles a recruiter can scan in seconds.
+const tile =
+  'rounded-3xl bg-card border border-glow/[0.08] p-6 sm:p-7 transition-colors hover:border-blue-light/40';
 
-export default function AboutMePage() {
+export default function HomePage() {
   return (
-    <main className="w-full flex items-start">
-      <div className="relative w-full max-w-6xl mx-auto flex flex-col md:flex-row items-center md:items-start justify-center gap-12">
-        {/* Left: Image & Contact Info Section */}
-        <section className="flex-1 flex flex-col items-start justify-start w-full max-w-sm md:max-w-none md:p-6">
-          <Image
-            src="/me-circle.png"
-            alt="Thomas Herrmann"
-            className="w-full h-auto max-w-xs mb-8 rounded-full"
-            width={320}
-            height={320}
-            priority
-          />
-          <h1 className="zvc-heading text-5xl md:text-6xl mb-3">
-            Thomas Herrmann
-          </h1>
-          <h2 className="zvc-kicker text-sm md:text-base mb-6">
-            Software Engineer
-          </h2>
-          <span className="zvc-rule mb-8" aria-hidden="true" />
-          <ul className="flex flex-col items-start gap-3 text-lg">
-            {contactLinks.map(({ href, label, Icon }) => (
-              <li key={href}>
-                <Link
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group flex flex-row items-center gap-3 zvc-link"
-                >
-                  <span className="zvc-icon-frame h-10 w-10">
-                    <Icon className="h-5 w-5" />
-                  </span>
-                  <span>{label}</span>
-                </Link>
+    <main className="font-body max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 auto-rows-[minmax(150px,auto)] gap-4">
+        {/* Intro */}
+        <section className={`${tile} sm:col-span-2 lg:row-span-2 flex flex-col justify-between bg-gradient-to-br from-card to-blue-light/15`}>
+          <div className="flex items-center gap-4 mb-8">
+            <Image
+              src="/me-circle.png"
+              alt="Thomas Herrmann"
+              width={88}
+              height={88}
+              priority
+              className="w-20 h-20 rounded-full"
+            />
+            <div>
+              <h1 className="font-display uppercase text-4xl tracking-wide leading-none">Thomas Herrmann</h1>
+              <p className="font-utility uppercase text-xs tracking-[0.2em] text-blue-light mt-2">
+                Senior Software Engineer
+              </p>
+            </div>
+          </div>
+          <p className="text-2xl sm:text-3xl leading-snug text-glow/90">{intro}</p>
+        </section>
+
+        {/* Contact */}
+        <section className={`${tile} flex flex-col justify-between`}>
+          <p className="font-utility uppercase text-xs tracking-[0.2em] text-glow/50">Reach Out</p>
+          <div className="flex flex-col gap-2 mt-4">
+            <a href={`mailto:${contact.email}`} className="flex items-center justify-between rounded-2xl bg-glow text-blackout px-4 py-3 font-utility uppercase text-xs tracking-[0.15em]">
+              Email <MdOutlineMail className="h-5 w-5" />
+            </a>
+            <div className="grid grid-cols-2 gap-2">
+              <a href={contact.linkedin} aria-label="LinkedIn" className="flex items-center justify-center rounded-2xl border border-glow/15 py-3 hover:border-glow/40">
+                <RiLinkedinBoxLine className="h-5 w-5" />
+              </a>
+              <a href={contact.github} aria-label="GitHub" className="flex items-center justify-center rounded-2xl border border-glow/15 py-3 hover:border-glow/40">
+                <RxGithubLogo className="h-5 w-5" />
+              </a>
+            </div>
+          </div>
+        </section>
+
+        {/* Resume */}
+        <Link href="/resume" className={`${tile} group flex flex-col justify-between bg-blue-light! border-blue-light!`}>
+          <MdArrowOutward className="h-8 w-8 self-end transition-transform group-hover:-translate-y-1 group-hover:translate-x-1" />
+          <p className="font-display uppercase text-5xl tracking-wide leading-none">Resume</p>
+        </Link>
+
+        {/* Metrics */}
+        {metrics.slice(0, 2).map((m) => (
+          <section key={m.label} className={`${tile} flex flex-col justify-between`}>
+            <p className="font-display text-6xl text-blue-light leading-none">{m.value}</p>
+            <p className="text-base text-glow/65 leading-snug mt-4">{m.label}</p>
+          </section>
+        ))}
+
+        {/* Experience */}
+        <section className={`${tile} sm:col-span-2 lg:row-span-2`}>
+          <p className="font-utility uppercase text-xs tracking-[0.2em] text-glow/50 mb-5">Experience</p>
+          <ul className="divide-y divide-glow/10">
+            {resumeData.experience.map((exp) => (
+              <li key={exp.company + exp.title} className="py-3 flex items-baseline justify-between gap-4">
+                <div>
+                  <p className="font-display uppercase text-2xl tracking-wide leading-tight">{exp.company}</p>
+                  <p className="text-base text-glow/60">{exp.title}</p>
+                </div>
+                <span className="font-utility text-xs tracking-[0.15em] text-retro-blue whitespace-nowrap">
+                  {exp.dates}
+                </span>
               </li>
             ))}
           </ul>
         </section>
 
-        {/* Right: About Me Section */}
-        <section className="flex-1 flex flex-col items-start justify-start gap-6 w-full md:p-6 md:pt-10">
-          <p className="zvc-kicker text-xs">Now Showing</p>
-          <h2 className="zvc-heading text-4xl md:text-5xl">About Me</h2>
-          <div className="zvc-body text-lg md:text-xl leading-relaxed">
-            <p className="mb-5">
-              {
-                "Hey! I'm Tom, a software engineer based in New York City with a knack for building scalable web applications and delivering modern UX. My career has been focused on planning and executing full-stack solutions at companies like Meta and Bloomberg, where I've led everything from monorepo refactorings to cross-development of large scale applications. I enjoy taking on technical leadership roles, mentoring junior engineers, and sharing my knowledge through public speaking."
-              }
-            </p>
-            <p>
-              {
-                "Beyond my professional work, I'm passionate about film and building community. I founded both Zero Vision Cinema, a pop-up movie theater, and Astoria Horror Club. This passion inspired me to leverage my technical skills to create a custom event ticketing system for ZVC, which helps us put on unique film screenings."
-              }
-            </p>
-          </div>
-          <div className="flex flex-col sm:flex-row gap-4 mt-2">
-            <Link href="/resume" className="zvc-btn">
-              View Resume
-            </Link>
-            <Link
-              href="https://www.zerovisioncinema.com"
-              className="zvc-btn-outline"
-            >
-              View ZVC
-            </Link>
+        {/* Skills */}
+        <section className={`${tile} sm:col-span-2`}>
+          <p className="font-utility uppercase text-xs tracking-[0.2em] text-glow/50 mb-4">Stack</p>
+          <div className="flex flex-wrap gap-2">
+            {skills.map((s) => (
+              <span key={s} className="rounded-full border border-glow/15 px-3 py-1 text-sm text-glow/80">
+                {s}
+              </span>
+            ))}
           </div>
         </section>
+
+        {/* Side project */}
+        <a href="https://www.zerovisioncinema.com" className={`${tile} group sm:col-span-2 flex flex-col justify-between`}>
+          <div className="flex items-start justify-between">
+            <p className="font-utility uppercase text-xs tracking-[0.2em] text-glow/50">Side Project</p>
+            <MdArrowOutward className="h-6 w-6 text-blue-light transition-transform group-hover:-translate-y-1 group-hover:translate-x-1" />
+          </div>
+          <div>
+            <p className="font-display uppercase text-3xl tracking-wide mt-4">Zero Vision Cinema</p>
+            <p className="text-base text-glow/65 mt-1 mb-3">Full-stack event ticketing system</p>
+            <div className="flex flex-wrap gap-2">
+              {zvcStack.map((s) => (
+                <span key={s} className="rounded-full bg-blue-light/15 text-blue-light px-3 py-1 text-xs font-utility uppercase tracking-[0.1em]">
+                  {s}
+                </span>
+              ))}
+            </div>
+          </div>
+        </a>
+
+        {/* Talks */}
+        <section className={`${tile} sm:col-span-2`}>
+          <p className="font-utility uppercase text-xs tracking-[0.2em] text-glow/50 mb-4">Talks</p>
+          <ul className="space-y-2 text-lg text-glow/80">
+            {resumeData.talks.map((t) => (
+              <li key={t}>{t}</li>
+            ))}
+          </ul>
+        </section>
+
+        {metrics.slice(2).map((m) => (
+          <section key={m.label} className={`${tile} flex flex-col justify-between`}>
+            <p className="font-display text-6xl text-blue-light leading-none">{m.value}</p>
+            <p className="text-base text-glow/65 leading-snug mt-4">{m.label}</p>
+          </section>
+        ))}
       </div>
     </main>
   );
