@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { MdArrowOutward, MdOutlineMail } from 'react-icons/md';
 import { RiLinkedinBoxLine } from 'react-icons/ri';
 import { RxGithubLogo } from 'react-icons/rx';
-import { intro, metrics, contact, skills, zvc, zvcStack, resumeData } from './content';
+import { intro, metrics, contact, skills, zvc, zvcStack, resumeData, groupExperience } from './content';
 
 // Bento grid: the whole story in one screen of tiles a recruiter can scan in seconds.
 const tile =
@@ -70,14 +70,21 @@ export default function HomePage() {
         <section className={`${tile} sm:col-span-2 lg:row-span-2`}>
           <p className="font-utility uppercase text-xs tracking-[0.2em] text-glow/50 mb-5">Experience</p>
           <ul className="divide-y divide-glow/10">
-            {resumeData.experience.map((exp) => (
-              <li key={exp.company + exp.title} className="py-3 flex items-baseline justify-between gap-4">
+            {groupExperience(resumeData.experience).map((group) => (
+              <li key={group.company + group.dates} className="py-3 flex items-baseline justify-between gap-4">
                 <div>
-                  <p className="font-display uppercase text-2xl tracking-wide leading-tight">{exp.company}</p>
-                  <p className="text-base text-glow/60">{exp.title}</p>
+                  <p className="font-display uppercase text-2xl tracking-wide leading-tight">{group.company}</p>
+                  {group.roles.map((role) => (
+                    <p key={role.title} className="text-base text-glow/60">
+                      {role.title}
+                      {group.roles.length > 1 && (
+                        <span className="font-utility text-xs tracking-[0.15em] text-glow/40 ml-2">{role.dates}</span>
+                      )}
+                    </p>
+                  ))}
                 </div>
                 <span className="font-utility text-xs tracking-[0.15em] text-retro-blue whitespace-nowrap">
-                  {exp.dates}
+                  {group.dates}
                 </span>
               </li>
             ))}
@@ -106,7 +113,7 @@ export default function HomePage() {
         {/* Side project */}
         <a href="https://www.zerovisioncinema.com" className={`${tile} group sm:col-span-2 flex flex-col justify-between`}>
           <div className="flex items-start justify-between">
-            <p className="font-utility uppercase text-xs tracking-[0.2em] text-glow/50">Founder Project</p>
+            <p className="font-utility uppercase text-xs tracking-[0.2em] text-glow/50">Project</p>
             <MdArrowOutward className="h-6 w-6 text-blue-light transition-transform group-hover:-translate-y-1 group-hover:translate-x-1" />
           </div>
           <div>

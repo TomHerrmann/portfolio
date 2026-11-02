@@ -2,6 +2,8 @@ export const resumeData = {
   header: {
     name: 'Thomas Herrmann',
     title: 'Senior Software Engineer | Full-Stack & AI',
+    summary:
+      'Senior software engineer (ex-Bloomberg, ex-Meta) building full-stack web apps and human-in-the-loop multi-agent AI systems.',
     location: 'New York City',
     phone: '631-681-3233',
     email: 'tomherrmannd@gmail.com',
@@ -16,16 +18,6 @@ export const resumeData = {
       'AWS, Vercel, Postgres, Stripe, CSS/Tailwind/Styled-Components, Jest/React Testing Library, Jenkins',
   },
   experience: [
-    {
-      company: 'Zero Vision Cinema',
-      title: 'Founder & Software Engineer',
-      dates: '2025-Present',
-      bullets: [
-        'Built and scaled a production ticketing platform for a NYC film community, processing 1k+ orders (Next.js, Payload CMS, Postgres, Stripe) with idempotent webhook fulfillment, queued retries and order recovery.',
-        'Architected a multi-agent pipeline (orchestrator, Claude Haiku drafters, independent verifier agents) that launches each event to Partiful, calendar and Linear, with human approval required before anything publishes.',
-        'Built a scheduled research agent with strict grounding rules (it cites only sources it actually fetched) that keeps the team informed of upcoming film news and press screenings through a daily email brief.',
-      ],
-    },
     {
       company: 'Bloomberg',
       title: 'Senior Software Engineer',
@@ -85,7 +77,18 @@ export const resumeData = {
       ],
     },
   ],
-  projects: [] as Project[],
+  projects: [
+    {
+      name: 'Zero Vision Cinema',
+      url: 'zerovisioncinema.com',
+      dates: '2025-Present',
+      bullets: [
+        'Built and scaled a production ticketing platform for a NYC film community, processing 1k+ orders (Next.js, Payload CMS, Postgres, Stripe) with idempotent webhook fulfillment, queued retries and order recovery.',
+        'Architected a multi-agent pipeline (orchestrator, Claude Haiku drafters, independent verifier agents) that launches each event to Partiful, calendar and Linear, with human approval required before anything publishes.',
+        'Built a grounded research agent (cites only sources it fetched) that emails the team a daily brief on film news and press screenings.',
+      ],
+    },
+  ],
   talks: [
     'Federated Web Application Architecture @ Bloomberg',
     'R+ with React in the Terminal @ Bloomberg',
@@ -106,6 +109,7 @@ export const resumeData = {
 export type Header = {
   name: string;
   title: string;
+  summary: string;
   location: string;
   phone: string;
   email: string;
