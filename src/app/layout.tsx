@@ -33,9 +33,9 @@ const bootzy = localFont({
 });
 
 export const metadata: Metadata = {
-  title: 'Thomas Herrmann - NYC Software Engineer',
+  title: 'Thomas Herrmann - NYC Senior Software Engineer, Full-Stack & AI',
   description:
-    "Hey, I'm Thomas Herrmann, a New York City based Software Engineer",
+    'Thomas Herrmann is a New York City senior software engineer (ex-Bloomberg, ex-Meta) building full-stack web apps and human-in-the-loop AI agents.',
 };
 
 export default function RootLayout({

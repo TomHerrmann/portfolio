@@ -1,7 +1,7 @@
 export const resumeData = {
   header: {
     name: 'Thomas Herrmann',
-    title: 'Software Engineer',
+    title: 'Senior Software Engineer | Full-Stack & AI',
     location: 'New York City',
     phone: '631-681-3233',
     email: 'tomherrmannd@gmail.com',
@@ -9,20 +9,32 @@ export const resumeData = {
   },
   skills: {
     languages:
-      'JavaScript/TypeScript, React, Next, Python, GraphQL, ReactQuery, Redux, Node.js, Express.js, PHP, SQL',
+      'JavaScript/TypeScript, React, Next.js, Python, GraphQL, React Query, Redux, Node.js, Express.js, PHP, SQL',
+    ai:
+      'Multi-agent orchestration (Anthropic Claude, OpenAI APIs), tool calling, context engineering (Cursor rules, Claude skills), MCP, human-in-the-loop (HITL)',
     tools:
-      'AWS, Vercel, CSS/Tailwind/Styled-Components, Jest/React Testing Library, Chronos, Jenkins, Webpack, Babel',
+      'AWS, Vercel, Postgres, Stripe, CSS/Tailwind/Styled-Components, Jest/React Testing Library, Jenkins',
   },
   experience: [
     {
+      company: 'Zero Vision Cinema',
+      title: 'Founder & Software Engineer',
+      dates: '2025-Present',
+      bullets: [
+        'Built and scaled a production ticketing platform for a NYC film community, processing 1k+ orders (Next.js, Payload CMS, Postgres, Stripe) with idempotent webhook fulfillment, queued retries and order recovery.',
+        'Architected a multi-agent pipeline (orchestrator, Claude Haiku drafters, independent verifier agents) that launches each event to Partiful, calendar and Linear, with human approval required before anything publishes.',
+        'Built a scheduled research agent with strict grounding rules (it cites only sources it actually fetched) that keeps the team informed of upcoming film news and press screenings through a daily email brief.',
+      ],
+    },
+    {
       company: 'Bloomberg',
       title: 'Senior Software Engineer',
-      dates: '2023-Current',
+      dates: '2023-2026',
       bullets: [
         'Spearheaded the design and execution of a centralized secure attachment system, mitigating a critical unauthorized access risk for legal contracts across the Bloomberg ecosystem.',
         'Engineered a custom RBAC and audit logging layer to ensure regulatory compliance, transitioning the organization from open internal access to a strictly governed, "least-privileged" read/write model.',
         'Architected a Federated Module architecture for contracts portal (9 sub-apps), decoupling deployment cycles for 5 pods and eliminating unintentional cross-team rollbacks.',
-        'Established the "Golden Path" migration playbook, enabling 20+ engineers to transition to independent release cycles, reducing deployment friction and eliminating the need for pre-release coordination between pods.',
+        'Established the "Golden Path" migration playbook and an AI-assisted workflow (shared Cursor rules, skill files, review checkpoints), enabling 20+ engineers across 4 teams to migrate 9 sub-apps from a monorepo to federated modules.',
         'Founded and chaired the Web Application Security Guild, establishing the organization-wide "Web App Security Best Practices" and evangelized these strategies across the firm through technical presentations.',
         'Operationalized a security on-call rotation, providing proactive code audits and vulnerability assessments to standardize security posture across all web properties.',
         'Served as the technical lead for web development, setting best practices, advocating for new technologies, and authoring documentation.',
@@ -73,17 +85,7 @@ export const resumeData = {
       ],
     },
   ],
-  projects: [
-    {
-      name: 'Zero Vision Cinema',
-      url: 'zerovisioncinema.com',
-      dates: '2025-Current',
-      bullets: [
-        'Engineered a full-stack event ticketing system using Next.js and Payload CMS, deployed via Vercel’s global edge network, and built with Shadcn and Tailwind CSS to create a modern user interface.',
-        'Integrated Stripe webhooks to manage secure ticket payments and leveraged Resend API to automate ticket delivery via emails, creating a seamless end-to-end user experience.',
-      ],
-    },
-  ],
+  projects: [] as Project[],
   talks: [
     'Federated Web Application Architecture @ Bloomberg',
     'R+ with React in the Terminal @ Bloomberg',
@@ -112,6 +114,7 @@ export type Header = {
 
 export type Skills = {
   languages: string;
+  ai: string;
   tools: string;
 };
 

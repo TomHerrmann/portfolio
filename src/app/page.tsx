@@ -27,7 +27,7 @@ export default function HomePage() {
             <div>
               <h1 className="font-display uppercase text-4xl tracking-wide leading-none">Thomas Herrmann</h1>
               <p className="font-utility uppercase text-xs tracking-[0.2em] text-blue-light mt-2">
-                Senior Software Engineer
+                Senior Software Engineer · Full-Stack & AI
               </p>
             </div>
           </div>
@@ -106,7 +106,7 @@ export default function HomePage() {
         {/* Side project */}
         <a href="https://www.zerovisioncinema.com" className={`${tile} group sm:col-span-2 flex flex-col justify-between`}>
           <div className="flex items-start justify-between">
-            <p className="font-utility uppercase text-xs tracking-[0.2em] text-glow/50">Side Project</p>
+            <p className="font-utility uppercase text-xs tracking-[0.2em] text-glow/50">Founder Project</p>
             <MdArrowOutward className="h-6 w-6 text-blue-light transition-transform group-hover:-translate-y-1 group-hover:translate-x-1" />
           </div>
           <div>

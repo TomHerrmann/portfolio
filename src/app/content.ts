@@ -3,7 +3,7 @@ import { resumeData } from './resume/resumeData';
 // Home page copy. Everything here is taken from the
 // existing site copy or resumeData; nothing new is claimed.
 export const intro =
-  "Hey! I'm Tom, a software engineer based in New York City with a knack for building scalable web applications and delivering modern UX.";
+  "Hey! I'm Tom, a senior software engineer in New York City. I build scalable web applications and AI agents that keep a human in the loop.";
 
 // Numbers pulled from Bloomberg bullets in resumeData.
 export const metrics = [
@@ -21,12 +21,17 @@ export const contact = {
 
 export const skills = [
   ...resumeData.skills.languages.split(',').map((s) => s.trim()),
+  'Claude / OpenAI APIs',
+  'Multi-agent orchestration',
+  'Context engineering',
+  'MCP',
   ...resumeData.skills.tools.split(',').map((s) => s.trim()),
 ];
 
-export const zvcStack = ['Next.js', 'Payload CMS', 'Stripe', 'QStash', 'Resend', 'Vercel'];
+export const zvcStack = ['Next.js', 'Payload CMS', 'Postgres', 'Stripe', 'Claude', 'QStash', 'Resend', 'Vercel'];
 
-// Summary is Tom's own wording; system lines come from the zero-vision-cinema README.
+// Summary is Tom's own wording; system lines come from the zero-vision-cinema README
+// and its .claude/skills/event-rollout pipeline.
 export const zvc = {
   summary:
     'A web app with an end-to-end ticketing system, newsletter and community integrations, built to support my passion: running community-focused movie events.',
@@ -34,6 +39,7 @@ export const zvc = {
     'Stripe payments with server-side pricing and double-charge protection',
     'Queued ticket emails with retries, so no buyer misses a ticket',
     'CMS admin for events, venues, orders, refunds and check-in',
+    'Multi-agent event rollout: Claude drafters and independent checker agents, with human approval before anything publishes',
   ],
 };
 
