@@ -85,7 +85,7 @@ export const resumeData = {
       bullets: [
         'Built and scaled a production ticketing platform for a NYC film community, processing 1k+ orders (Next.js, Payload CMS, Postgres, Stripe) with idempotent webhook fulfillment, queued retries and order recovery.',
         'Architected a multi-agent pipeline (orchestrator, Claude Haiku drafters, independent verifier agents) that launches each event to Partiful, calendar and Linear, with human approval required before anything publishes.',
-        'Built a scheduled research agent with strict grounding rules (it cites only sources it actually fetched) that keeps the team informed of upcoming film news and press screenings through a daily email brief.',
+        'Built a grounded research agent (cites only sources it fetched) that emails the team a daily brief on film news and press screenings.',
       ],
     },
   ],
