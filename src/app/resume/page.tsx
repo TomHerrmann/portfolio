@@ -150,27 +150,32 @@ export default function ResumePage() {
 
       {resumeData.projects.length > 0 && (
       <Section title="AI & Engineering Projects">
+        <div className="flex flex-col gap-8">
         {resumeData.projects.map((proj, index) => (
           <div key={index}>
             <ItemHeader
               name={
                 <>
                   {proj.name}{' '}
-                  <a
-                    href={`https://${proj.url}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="font-body normal-case text-base tracking-normal text-blue-light hover:underline"
-                  >
-                    {proj.url}
-                  </a>
+                  {proj.url && (
+                    <a
+                      href={`https://${proj.url}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-body normal-case text-base tracking-normal text-blue-light hover:underline"
+                    >
+                      {proj.url}
+                    </a>
+                  )}
                 </>
               }
+              sub={proj.stack}
               dates={proj.dates}
             />
             <Bullets bullets={proj.bullets} />
           </div>
         ))}
+        </div>
       </Section>
       )}
 

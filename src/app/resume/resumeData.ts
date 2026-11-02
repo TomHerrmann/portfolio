@@ -88,6 +88,15 @@ export const resumeData = {
         'Built a grounded research agent (cites only sources it fetched) that emails the team a daily brief on film news and press screenings.',
       ],
     },
+    {
+      name: 'ZVC Cutroom',
+      stack: 'Python, Claude API, DaVinci Resolve',
+      dates: 'June 2026-Present',
+      bullets: [
+        'Built an agentic video editor using Claude to assemble multiple cuts for social media from Pydantic edit decisions.',
+        'Created an AI subtitle review agent that generates and proofreads captions and flags unverifiable words for a human in the loop before any video is published.',
+      ],
+    },
   ],
   talks: [
     'Federated Web Application Architecture @ Bloomberg',
@@ -131,7 +140,8 @@ export type Experience = {
 
 export type Project = {
   name: string;
-  url: string;
+  url?: string;
+  stack?: string;
   dates?: string;
   bullets: string[];
 };
