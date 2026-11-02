@@ -44,3 +44,30 @@ export const zvc = {
 };
 
 export { resumeData };
+
+export type ExperienceGroup = {
+  company: string;
+  dates: string;
+  roles: (typeof resumeData.experience)[number][];
+};
+
+// Consecutive roles at the same company render as one position with
+// several titles (e.g. Meta: Rotational, then E4).
+export function groupExperience(
+  experience: typeof resumeData.experience
+): ExperienceGroup[] {
+  const groups: ExperienceGroup[] = [];
+  for (const role of experience) {
+    const last = groups[groups.length - 1];
+    if (last && last.company === role.company) last.roles.push(role);
+    else groups.push({ company: role.company, dates: role.dates, roles: [role] });
+  }
+  for (const g of groups) {
+    if (g.roles.length > 1) {
+      const end = g.roles[0].dates.split('-').pop();
+      const start = g.roles[g.roles.length - 1].dates.split('-')[0];
+      g.dates = `${start}-${end}`;
+    }
+  }
+  return groups;
+}

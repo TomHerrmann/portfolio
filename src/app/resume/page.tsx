@@ -1,5 +1,6 @@
 import React from 'react';
 import { resumeData } from './resumeData';
+import { groupExperience } from '../content';
 import { MdArrowBack } from 'react-icons/md';
 import Link from 'next/link';
 
@@ -70,6 +71,7 @@ export default function ResumePage() {
         <p className="font-utility uppercase text-sm tracking-[0.2em] text-blue-light mt-3">
           {resumeData.header.title}
         </p>
+        <p className="mt-4 text-lg text-glow/80 max-w-3xl">{resumeData.header.summary}</p>
         <div className="mt-6 flex flex-wrap gap-2 text-sm">
           {[
             resumeData.header.location,
@@ -116,17 +118,38 @@ export default function ResumePage() {
 
       <Section title="Work Experience">
         <div className="divide-y divide-glow/10">
-          {resumeData.experience.map((exp, index) => (
-            <div key={index} className="py-6 first:pt-0 last:pb-0">
-              <ItemHeader name={exp.company} sub={exp.title} dates={exp.dates} />
-              <Bullets bullets={exp.bullets} />
+          {groupExperience(resumeData.experience).map((group) => (
+            <div key={group.company + group.dates} className="py-6 first:pt-0 last:pb-0">
+              {group.roles.length === 1 ? (
+                <>
+                  <ItemHeader name={group.company} sub={group.roles[0].title} dates={group.dates} />
+                  <Bullets bullets={group.roles[0].bullets} />
+                </>
+              ) : (
+                <>
+                  <ItemHeader name={group.company} dates={group.dates} />
+                  <div className="flex flex-col gap-5">
+                    {group.roles.map((role) => (
+                      <div key={role.title}>
+                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-baseline gap-1 mb-2">
+                          <h4 className="text-lg text-glow/90">{role.title}</h4>
+                          <span className="font-utility text-xs tracking-[0.15em] text-glow/50 whitespace-nowrap">
+                            {role.dates}
+                          </span>
+                        </div>
+                        <Bullets bullets={role.bullets} />
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
           ))}
         </div>
       </Section>
 
       {resumeData.projects.length > 0 && (
-      <Section title="Personal Projects">
+      <Section title="AI & Engineering Projects">
         {resumeData.projects.map((proj, index) => (
           <div key={index}>
             <ItemHeader
