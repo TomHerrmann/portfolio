@@ -28,7 +28,7 @@ export const skills = [
   ...resumeData.skills.tools.split(',').map((s) => s.trim()),
 ];
 
-export const zvcStack = ['Next.js', 'Payload CMS', 'Postgres', 'Stripe', 'Claude', 'QStash', 'Resend', 'Vercel'];
+export const zvcStack = ['Next.js', 'Payload CMS', 'Postgres', 'Stripe', 'Claude', 'QStash', 'Resend', 'Vercel', 'Python', 'DaVinci Resolve'];
 
 // Summary is Tom's own wording; system lines come from the zero-vision-cinema README
 // and its .claude/skills/event-rollout pipeline.
@@ -40,6 +40,7 @@ export const zvc = {
     'Queued ticket emails with retries, so no buyer misses a ticket',
     'CMS admin for events, venues, orders, refunds and check-in',
     'Multi-agent event rollout: Claude drafters and independent checker agents, with human approval before anything publishes',
+    'Cutroom: a Claude-driven video editor that cuts social clips in DaVinci Resolve, with a subtitle review agent and a human in the loop',
   ],
 };
 
