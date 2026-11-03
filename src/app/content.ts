@@ -7,10 +7,10 @@ export const intro =
 
 // Numbers pulled from Bloomberg bullets in resumeData.
 export const metrics = [
-  { value: '9', label: 'Sub-apps moved to a Federated Module architecture' },
-  { value: '5', label: 'Pods given independent deployment cycles' },
+  { value: '9', label: 'Sub-apps moved to a micro-frontend architecture' },
+  { value: '4', label: 'Teams given independent deployment cycles' },
   { value: '20+', label: 'Engineers onboarded via the "Golden Path" playbook' },
-  { value: '0', label: 'Unintentional cross-team rollbacks after the federated split' },
+  { value: '0', label: 'Unintentional cross-team rollbacks after the micro-frontend split' },
 ];
 
 export const contact = {
@@ -23,6 +23,9 @@ export const skills = [
   ...resumeData.skills.languages.split(',').map((s) => s.trim()),
   'Claude / OpenAI APIs',
   'Multi-agent orchestration',
+  'Agent harnesses',
+  'RAG',
+  'LLM evals',
   'Context engineering',
   'MCP',
   ...resumeData.skills.tools.split(',').map((s) => s.trim()),
@@ -40,7 +43,7 @@ export const zvc = {
     'Queued ticket emails with retries, so no buyer misses a ticket',
     'CMS admin for events, venues, orders, refunds and check-in',
     'Multi-agent event rollout: Claude drafters and independent checker agents, with human approval before anything publishes',
-    'Cutroom: a Claude-driven video editor that cuts social clips in DaVinci Resolve, with a subtitle review agent and a human in the loop',
+    'Cutroom: a Claude-driven video-editing harness for DaVinci Resolve, with transcript RAG, a subtitle review agent and a human in the loop',
   ],
 };
 

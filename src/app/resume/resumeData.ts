@@ -3,7 +3,7 @@ export const resumeData = {
     name: 'Thomas Herrmann',
     title: 'Senior Software Engineer | Full-Stack & AI',
     summary:
-      'Senior software engineer (ex-Bloomberg, ex-Meta) building full-stack web apps and human-in-the-loop multi-agent AI systems.',
+      'Senior software engineer (ex-Bloomberg, ex-Meta) building full-stack web apps and human-in-the-loop (HITL) multi-agent LLM systems.',
     location: 'New York City',
     phone: '631-681-3233',
     email: 'tomherrmannd@gmail.com',
@@ -13,9 +13,9 @@ export const resumeData = {
     languages:
       'JavaScript/TypeScript, React, Next.js, Python, GraphQL, React Query, Redux, Node.js, Express.js, PHP, SQL',
     ai:
-      'Multi-agent orchestration (Anthropic Claude, OpenAI APIs), tool calling, context engineering (Cursor rules, Claude skills), MCP, human-in-the-loop (HITL)',
+      'Multi-agent orchestration (Anthropic Claude, OpenAI APIs), agent harnesses, tool calling, structured outputs, RAG (pgvector), LLM evals, prompt and context engineering, MCP, human-in-the-loop (HITL)',
     tools:
-      'AWS, Vercel, Postgres, Stripe, CSS/Tailwind/Styled-Components, Jest/React Testing Library, Jenkins',
+      'AWS, Kubernetes, Docker, Redis, Postgres, Vercel, Stripe, Jenkins (CI/CD), Jest/React Testing Library, CSS/Tailwind/Styled-Components',
   },
   experience: [
     {
@@ -25,8 +25,8 @@ export const resumeData = {
       bullets: [
         'Spearheaded the design and execution of a centralized secure attachment system, mitigating a critical unauthorized access risk for legal contracts across the Bloomberg ecosystem.',
         'Engineered a custom RBAC and audit logging layer to ensure regulatory compliance, transitioning the organization from open internal access to a strictly governed, "least-privileged" read/write model.',
-        'Architected a Federated Module architecture for contracts portal (9 sub-apps), decoupling deployment cycles for 5 pods and eliminating unintentional cross-team rollbacks.',
-        'Established the "Golden Path" migration playbook and an AI-assisted workflow (shared Cursor rules, skill files, review checkpoints), enabling 20+ engineers across 4 teams to migrate 9 sub-apps from a monorepo to federated modules.',
+        'Built a micro-frontend architecture for the contracts portal (9 sub-apps), a scalable system design that decoupled deployments for 4 teams and eliminated unintentional cross-team rollbacks.',
+        'Established the "Golden Path" migration playbook and an AI-assisted workflow (prompt engineering, shared Cursor rules, skill files, review checkpoints), enabling 20+ engineers across 4 teams to migrate 9 sub-apps from a monorepo to micro-frontends.',
         'Founded and chaired the Web Application Security Guild, establishing the organization-wide "Web App Security Best Practices" and evangelized these strategies across the firm through technical presentations.',
         'Operationalized a security on-call rotation, providing proactive code audits and vulnerability assessments to standardize security posture across all web properties.',
         'Served as the technical lead for web development, setting best practices, advocating for new technologies, and authoring documentation.',
@@ -93,8 +93,9 @@ export const resumeData = {
       stack: 'Python, Claude API, DaVinci Resolve',
       dates: 'June 2026-Present',
       bullets: [
-        'Built an agentic video editor using Claude to assemble multiple cuts for social media from Pydantic edit decisions.',
-        'Created an AI subtitle review agent that generates and proofreads captions and flags unverifiable words for a human in the loop before any video is published.',
+        'Built an agentic video-editing harness in which Claude drives DaVinci Resolve via tool calls, assembling multi-platform cuts from Pydantic structured outputs.',
+        'Built a RAG pipeline over video transcripts (pgvector embeddings) that retrieves key moments to select clips and write grounded per-platform social copy.',
+        'Created a subtitle review agent that proofreads AI captions and flags unverifiable words for a human in the loop, backed by an eval set and a test harness against a mocked Resolve.',
       ],
     },
   ],
