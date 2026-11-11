@@ -8,7 +8,7 @@ export const intro =
 // Numbers pulled from Bloomberg bullets in resumeData.
 export const metrics = [
   { value: '9', label: 'Sub-apps moved to a micro-frontend architecture' },
-  { value: '1 week', label: 'Per sub-app migration with an AI-assisted workflow, down from one month' },
+  { value: '1 week', label: 'Per sub-app migration with an AI-assisted workflow, down from 1 month' },
   { value: '20+', label: 'Engineers moved onto an AI-assisted migration workflow' },
   { value: '0', label: 'Unintentional cross-team rollbacks after the micro-frontend split' },
 ];
@@ -61,7 +61,7 @@ export const aiWork = [
     name: 'Bloomberg',
     sub: 'AI-assisted engineering at scale',
     lines: [
-      'AI-assisted migration workflow cut each sub-app migration from one month to 1 week',
+      'AI-assisted migration workflow cut each sub-app migration from 1 month to 1 week',
       'Adopted by all 4 teams (20+ engineers) to move 9 sub-apps to micro-frontends',
       'Automated module decoupling, tests, the React Query migration and PRs for human review',
       'Reusable repo-level skill files enforce 80%+ test coverage, PII compliance and query caching strategies',
