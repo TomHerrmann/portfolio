@@ -3,6 +3,14 @@ import { resumeData } from './resumeData';
 import { groupExperience } from '../content';
 import { MdArrowBack } from 'react-icons/md';
 import Link from 'next/link';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Resume: Senior Software Engineer, AI & Full-Stack',
+  description:
+    'Resume of Thomas Herrmann, NYC senior software engineer and AI engineer (ex-Bloomberg, ex-Meta): multi-agent LLM systems, RAG, LLM evals, tool calling, and full-stack TypeScript, React, Next.js and Python.',
+  alternates: { canonical: '/resume' },
+};
 
 const card = 'rounded-3xl bg-card border border-glow/[0.08] p-6 sm:p-8';
 const label = 'font-utility uppercase text-xs tracking-[0.2em] text-glow/50';
@@ -93,6 +101,37 @@ export default function ResumePage() {
         </div>
       </header>
 
+      {resumeData.projects.length > 0 && (
+      <Section title="AI & Engineering Projects">
+        <div className="flex flex-col gap-8">
+        {resumeData.projects.map((proj, index) => (
+          <div key={index}>
+            <ItemHeader
+              name={
+                <>
+                  {proj.name}{' '}
+                  {proj.url && (
+                    <a
+                      href={`https://${proj.url}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-body normal-case text-base tracking-normal text-blue-light hover:underline"
+                    >
+                      {proj.url}
+                    </a>
+                  )}
+                </>
+              }
+              sub={proj.stack}
+              dates={proj.dates}
+            />
+            <Bullets bullets={proj.bullets} />
+          </div>
+        ))}
+        </div>
+      </Section>
+      )}
+
       <Section title="Technical Skills">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div>
@@ -147,37 +186,6 @@ export default function ResumePage() {
           ))}
         </div>
       </Section>
-
-      {resumeData.projects.length > 0 && (
-      <Section title="AI & Engineering Projects">
-        <div className="flex flex-col gap-8">
-        {resumeData.projects.map((proj, index) => (
-          <div key={index}>
-            <ItemHeader
-              name={
-                <>
-                  {proj.name}{' '}
-                  {proj.url && (
-                    <a
-                      href={`https://${proj.url}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="font-body normal-case text-base tracking-normal text-blue-light hover:underline"
-                    >
-                      {proj.url}
-                    </a>
-                  )}
-                </>
-              }
-              sub={proj.stack}
-              dates={proj.dates}
-            />
-            <Bullets bullets={proj.bullets} />
-          </div>
-        ))}
-        </div>
-      </Section>
-      )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Section title="Selected Talks">

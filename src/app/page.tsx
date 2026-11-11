@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { MdArrowOutward, MdOutlineMail } from 'react-icons/md';
 import { RiLinkedinBoxLine } from 'react-icons/ri';
 import { RxGithubLogo } from 'react-icons/rx';
-import { intro, metrics, contact, skills, zvc, zvcStack, resumeData, groupExperience } from './content';
+import { intro, metrics, contact, skills, aiSkills, aiWork, zvc, zvcStack, resumeData, groupExperience } from './content';
 
 // Bento grid: the whole story in one screen of tiles a recruiter can scan in seconds.
 const tile =
@@ -12,7 +12,7 @@ const tile =
 export default function HomePage() {
   return (
     <main className="font-body max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 auto-rows-[minmax(150px,auto)] gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 auto-rows-[minmax(150px,auto)] grid-flow-row-dense gap-4">
         {/* Intro */}
         <section className={`${tile} sm:col-span-2 lg:row-span-2 flex flex-col justify-between bg-gradient-to-br from-card to-blue-light/15`}>
           <div className="flex items-center gap-4 mb-8">
@@ -27,7 +27,7 @@ export default function HomePage() {
             <div>
               <h1 className="font-display uppercase text-4xl tracking-wide leading-none">Thomas Herrmann</h1>
               <p className="font-utility uppercase text-xs tracking-[0.2em] text-blue-light mt-2">
-                Senior Software Engineer · Full-Stack & AI
+                Senior Software Engineer · AI & Full-Stack
               </p>
             </div>
           </div>
@@ -58,6 +58,29 @@ export default function HomePage() {
           <p className="font-display uppercase text-5xl tracking-wide leading-none">Resume</p>
         </Link>
 
+        {/* AI work */}
+        <section aria-labelledby="ai-work" className={`${tile} sm:col-span-2 lg:col-span-4 bg-gradient-to-br from-card to-cult-classic/20`}>
+          <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-2 mb-6">
+            <h2 id="ai-work" className="font-display uppercase text-4xl tracking-wide leading-none">AI Engineering</h2>
+            <p className="font-utility uppercase text-xs tracking-[0.2em] text-blue-light">
+              Multi-agent systems · Tool calling · RAG · Evals · Human in the loop
+            </p>
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {aiWork.map((w) => (
+              <article key={w.name}>
+                <h3 className="font-display uppercase text-2xl tracking-wide leading-tight">{w.name}</h3>
+                <p className="font-utility uppercase text-[0.7rem] tracking-[0.15em] text-glow/50 mt-1 mb-3">{w.sub}</p>
+                <ul className="list-disc marker:text-blue-light pl-5 space-y-1.5 text-base text-glow/75 leading-snug">
+                  {w.lines.map((l) => (
+                    <li key={l}>{l}</li>
+                  ))}
+                </ul>
+              </article>
+            ))}
+          </div>
+        </section>
+
         {/* Metrics */}
         {metrics.slice(0, 2).map((m) => (
           <section key={m.label} className={`${tile} flex flex-col justify-between`}>
@@ -68,7 +91,7 @@ export default function HomePage() {
 
         {/* Experience */}
         <section className={`${tile} sm:col-span-2 lg:row-span-2`}>
-          <p className="font-utility uppercase text-xs tracking-[0.2em] text-glow/50 mb-5">Experience</p>
+          <h2 className="font-utility uppercase text-xs tracking-[0.2em] text-glow/50 mb-5">Experience</h2>
           <ul className="divide-y divide-glow/10">
             {groupExperience(resumeData.experience).map((group) => (
               <li key={group.company + group.dates} className="py-3 flex items-baseline justify-between gap-4">
@@ -100,7 +123,14 @@ export default function HomePage() {
 
         {/* Skills */}
         <section className={`${tile} sm:col-span-2`}>
-          <p className="font-utility uppercase text-xs tracking-[0.2em] text-glow/50 mb-4">Stack</p>
+          <h2 className="font-utility uppercase text-xs tracking-[0.2em] text-glow/50 mb-4">Stack</h2>
+          <div className="flex flex-wrap gap-2 mb-3">
+            {aiSkills.map((s) => (
+              <span key={s} className="rounded-full bg-blue-light/15 text-blue-light px-3 py-1 text-sm">
+                {s}
+              </span>
+            ))}
+          </div>
           <div className="flex flex-wrap gap-2">
             {skills.map((s) => (
               <span key={s} className="rounded-full border border-glow/15 px-3 py-1 text-sm text-glow/80">
@@ -136,7 +166,7 @@ export default function HomePage() {
 
         {/* Talks */}
         <section className={`${tile} sm:col-span-2`}>
-          <p className="font-utility uppercase text-xs tracking-[0.2em] text-glow/50 mb-4">Talks</p>
+          <h2 className="font-utility uppercase text-xs tracking-[0.2em] text-glow/50 mb-4">Talks</h2>
           <ul className="space-y-2 text-lg text-glow/80">
             {resumeData.talks.map((t) => (
               <li key={t}>{t}</li>
