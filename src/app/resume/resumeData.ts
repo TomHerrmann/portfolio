@@ -47,7 +47,8 @@ export const resumeData = {
       title: 'Senior Software Engineer',
       dates: '2023-2026',
       bullets: [
-        'Established the "Golden Path" migration playbook and an AI-assisted workflow (prompt engineering, shared Cursor rules, skill files, review checkpoints), enabling 20+ engineers across 4 teams to migrate 9 sub-apps from a monorepo to micro-frontends.',
+        'Established the "Golden Path" playbook and an AI-assisted migration workflow (shared Cursor rules, skill files, human-in-the-loop PR review) that cut each sub-app migration from one month to 3 days, adopted by all 4 teams (20+ engineers) to move 9 sub-apps to micro-frontends.',
+        'Automated module decoupling, test writing, the React Query migration and PR creation for human review, using reusable repo-level skill files that enforce 80%+ test coverage, PII compliance and query caching strategies.',
         'Architected Module Federation for the contracts portal (9 sub-apps), decoupling deployments for 4 teams and ending cross-team rollbacks.',
         'Engineered a custom RBAC and audit logging layer for regulatory compliance, moving the org from open internal access to least-privilege.',
         'Led design and execution of a centralized secure attachment system that closed a critical unauthorized access risk for legal contracts.',
