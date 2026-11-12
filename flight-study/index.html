@@ -110,6 +110,16 @@ details.case div{margin-top:6px} details.case b{display:block;color:var(--muted)
 .opt.right{border-color:var(--good);color:var(--good)} .opt.wrong{border-color:var(--bad);color:var(--bad)}
 .flash{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:22px 18px;margin:14px 0;min-height:240px;display:flex;flex-direction:column;gap:14px;cursor:pointer}
 .flash .q{font-size:19px;font-weight:650;line-height:1.4} .flash .a{font-size:16px;border-top:1px solid var(--line);padding-top:14px} .flash .tap{color:var(--muted);font-size:13px;margin-top:auto}
+button.term,.term-demo{all:unset;color:inherit;text-decoration:underline dotted;text-decoration-color:var(--accent);text-decoration-thickness:2px;text-underline-offset:3px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+a.xl{color:var(--accent);text-decoration:underline;text-underline-offset:2px}
+.sheet-wrap{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,0);transition:background .2s;display:flex;align-items:flex-end;justify-content:center}
+.sheet-wrap.open{background:rgba(0,0,0,.45)}
+.sheet{width:100%;max-width:640px;background:var(--surface);border-radius:18px 18px 0 0;padding:10px 18px calc(18px + env(safe-area-inset-bottom));transform:translateY(100%);transition:transform .2s ease;border-top:1px solid var(--line)}
+.sheet-wrap.open .sheet{transform:none}
+.sheet h3{margin:4px 0 6px;font-size:20px} .sheet p{margin:0 0 6px;font-size:16px}
+.sheet .grab{width:40px;height:5px;border-radius:3px;background:var(--line);margin:0 auto 10px}
+.row.gl{align-items:flex-start} .row.gl .s{color:var(--text);opacity:.85;font-size:14px;margin-top:2px} .row.gl a.xl{font-size:13px}
+.update-bar{position:fixed;left:16px;right:16px;bottom:calc(70px + env(safe-area-inset-bottom));z-index:40;border:0;border-radius:12px;padding:12px;background:var(--accent);color:var(--accent-ink);font-weight:700;font-size:15px}
 @media (min-width:700px){.grid2{grid-template-columns:repeat(3,1fr)}}
 </style>
 </head>
@@ -124,7 +134,7 @@ details.case div{margin-top:6px} details.case b{display:block;color:var(--muted)
   <a href="#/drill" data-tab="drill"><span>⚡&#xFE0E;</span>Drill</a>
 </nav>
 <script>
-var APP_VERSION = "1";
+var APP_VERSION = "2";
 // Problems part 1: arrays, two pointers, sliding window, stack, binary search, linked list
 var PROBLEMS = (typeof PROBLEMS !== 'undefined' ? PROBLEMS : []).concat([
 {
@@ -1993,6 +2003,28 @@ Sync code → microtasks (promise callbacks, queueMicrotask) drain fully → one
 }
 ];
 
+var PATTERN_INTROS = {
+  'hashing': "A [hash map](#/learn/ds) is a lookup table: give it a key, get the value back instantly, no matter how much is stored. Most \"compare everything with everything\" problems get way faster once you remember what you've already seen in one.",
+  'two-pointers': "Instead of checking every pair (slow, O(n²) in [Big-O](#/learn/bigo) terms), keep two positions in the array and move them based on what you see. Each move rules out a bunch of pairs at once.",
+  'sliding-window': "A window is a stretch of consecutive items, defined by a left and right index. Slide it along: grow it from the right, shrink it from the left when it breaks a rule. You look at each item about twice, so it's fast.",
+  'stack': "A [stack](#/learn/ds) is a pile: you only touch the top. That makes it perfect for \"the most recent thing I haven't dealt with yet\", like an unclosed bracket.",
+  'binary-search': "Binary search is the \"guess the number, higher or lower?\" game. Each guess cuts the remaining options in half, so even a billion items takes about 30 guesses.",
+  'linked-list': "A [linked list](#/learn/ds) is a chain of nodes where each node only knows the next one. No jumping to position 50; you walk. Most tricks are about re-pointing arrows in the right order.",
+  'tree-dfs': "DFS (depth-first search) explores a [tree](#/learn/ds) by going all the way down one branch before backing up. It's usually written with [recursion](#/learn/recursion): solve the children, then combine their answers.",
+  'tree-bfs': "BFS (breadth-first search) explores a tree level by level, like ripples in a pond. You keep a queue of nodes to visit next.",
+  'heap': "A [heap](#/learn/ds) always hands you the smallest (or largest) item quickly, without keeping everything fully sorted. Use it when you keep asking \"what's the best one right now?\"",
+  'graphs': "A [graph](#/learn/ds) is things connected to other things: cities and roads, courses and prerequisites, cells in a grid and their neighbors. The work is usually exploring it with BFS or DFS without visiting anything twice.",
+  'union-find': "Union-Find keeps track of groups. Two operations: \"merge these two groups\" and \"are these two in the same group?\" Both are nearly instant.",
+  'backtracking': "Backtracking is organized trial and error: make a choice, keep going, and if it doesn't work out, undo it and try the next option. It's [recursion](#/learn/recursion) over a tree of choices.",
+  'intervals': "Intervals are [start, end] pairs like meeting times. Almost every interval problem starts with sorting by start time, then walking through once.",
+  'dp-1d': "Dynamic programming = notice you're solving the same smaller problem over and over, so save each answer and reuse it. It's [recursion](#/learn/recursion) plus a memo table, or the same thing filled in with a loop.",
+  'dp-2d': "Same DP idea, but each answer depends on two things (position in string A and string B, or row and column in a grid), so you fill in a table instead of a list.",
+  'greedy': "Greedy = always take the option that looks best right now and never reconsider. Fast and simple, but only correct for certain problems, so you need a one-line reason why it's safe.",
+  'prefix': "A prefix sum is a running total. Once you have it, the sum of any stretch of the array is just one subtraction instead of a loop.",
+  'trie': "A trie is a [tree](#/learn/ds) of letters. Words that share a beginning share a path, so finding everything starting with \"ca\" is quick.",
+  'practical': "These are \"build a mini version of a real tool\" questions. Interviewers watch how you design the API, handle edge cases and talk through trade-offs, more than clever algorithms."
+};
+PATTERNS.forEach(p => { if (PATTERN_INTROS[p.id]) p.body = '## TL;DR\n' + PATTERN_INTROS[p.id] + '\n\n' + p.body; });
 
 var SD_GUIDES = [
 {
@@ -2127,250 +2159,842 @@ Making trade-offs explicit: "Cursor pagination over offset because new posts arr
 }
 ];
 
+
+
 var SD_CONCEPTS = [
 {
-  id: 'scaling', name: 'Scaling: vertical, horizontal, stateless services',
-  body: `**Vertical** = bigger machine. Simple, limited, single point of failure.
-**Horizontal** = more machines behind a load balancer. Requires **stateless** services: session state in a shared store (Redis) or in a signed token, files in blob storage.
+  id: 'request-path', name: 'Foundations: what happens when you hit "Send"',
+  body: `## TL;DR
+A system design diagram is just a map of the journey a request takes from a user's device to the place where data lives, and back again.
 
-**Load balancers**: L4 (TCP, fast, dumb) vs L7 (HTTP-aware: path routing, header-based, sticky sessions). Algorithms: round robin, least connections, consistent hashing (for cache locality or WebSocket affinity).
+## Why start here
+Every other concept (caching, scaling, queues) is a tweak to one step of this journey. If the journey is clear, the boxes and arrows in an interview stop being abstract.
 
-**Say:** "Services are stateless so we can autoscale on CPU/RPS; state lives in the DB, cache and blob store."`
+## The journey, step by step
+1. **Client.** The program the user is touching: a browser, an iPhone app, another company's server. It *starts* requests.
+2. **DNS lookup.** Computers find each other by numeric **IP addresses** (like a phone number). DNS is the internet's phone book that turns \`api.example.com\` into an IP address. The answer is cached so this step is usually skipped.
+3. **The network trip.** The request travels over the internet using **TCP** (a protocol that guarantees bytes arrive in order and complete) wrapped in **TLS** (encryption, the "S" in HTTPS). Distance matters: light in fiber takes ~70 ms to cross the US and back.
+4. **Load balancer.** A front door that receives every request and hands it to one of many identical servers behind it. (See [Load balancing](#/sd/concept/load-balancing).)
+5. **Application server** (also "service" or "backend"). A program running on a machine that contains your business logic: "check the password", "build the feed". It's where your code runs.
+6. **Data stores.** The app server asks a **database** (durable storage on disk, survives restarts) and maybe a **cache** (fast copy in memory) for the data it needs.
+7. **The response** travels back the same way, and the client renders it.
+
+## Key terms
+- **Server**: a computer (usually a rented virtual machine or container in a cloud data center) that waits for requests and answers them.
+- **Request / response**: one message asking for something, one message answering. In web systems this is usually **HTTP**, with a method (GET read, POST create, PUT/PATCH update, DELETE remove), a path (\`/users/42\`), headers (metadata like auth tokens) and an optional body (JSON data).
+- **API** (Application Programming Interface): the list of requests a server agrees to answer and what each returns. "Design the API" means "list the endpoints and their inputs/outputs".
+- **Endpoint**: one entry in that list, e.g. \`POST /bookings\`.
+- **Latency**: how long one request takes, end to end. Measured in milliseconds.
+- **Throughput**: how many requests the system handles per second (**QPS**/**RPS**: queries/requests per second).
+- **p50 / p99**: percentiles. "p99 latency is 200 ms" means 99% of requests finish within 200 ms; the slowest 1% take longer. Interviewers care about p99 because that's what unhappy users feel.
+
+## How to use this in an interview
+When you draw the high-level design, literally narrate this path for each feature: "The client calls POST /bookings, the load balancer routes it to a Booking Service instance, which opens a transaction in Postgres…" It sounds simple, but it keeps you concrete and the interviewer can follow every step.
+
+## Related
+[Scaling](#/sd/concept/scaling) · [Load balancing](#/sd/concept/load-balancing) · [Databases](#/sd/concept/databases) · [Caching](#/sd/concept/caching)`
 },
 {
-  id: 'consistency', name: 'CAP, consistency and when it matters',
-  body: `During a network partition you choose **consistency** (refuse/serialize requests) or **availability** (answer with possibly stale data).
+  id: 'scaling', name: 'Scaling: what it means, vertical vs horizontal, stateless',
+  body: `## TL;DR
+**Scaling** is changing a system so it keeps working well (fast and available) when it has to handle more: more users, more requests per second, or more data.
 
-Decide **per feature**, not per system:
-- Strong consistency: inventory/booking, payments, balances, unique usernames, auth revocation.
-- Eventual consistency is fine: feeds, like counts, view counts, search indexes, recommendations.
+## Why it matters
+A design that works for 100 users can fall over at 10 million. Something runs out first: CPU (the processor is 100% busy), memory (RAM is full), disk space, disk speed, or network bandwidth. That first thing to run out is called the **bottleneck**. Scaling is the practice of finding the bottleneck and removing it, then finding the next one.
 
-Consistency levels to name: strong (linearizable), read-your-writes (user sees their own post immediately), monotonic reads, eventual.
+Scaling is about two different "mores":
+- **More load**: more requests per second (throughput). A server can only process so many at once.
+- **More data**: more bytes stored than one machine's disk or memory holds.
 
-**Practical tools:** single-leader Postgres for the strong parts; read replicas + cache for the eventual parts. Read-your-writes trick: route a user's reads to the primary for a few seconds after they write, or have the client optimistically render.`
+## Option 1: vertical scaling ("scale up")
+Replace the machine with a bigger one: more CPU cores, more RAM, faster disks.
+- **Pros:** no code changes. Everything stays on one machine, so there's no coordination between machines.
+- **Cons:** there's a ceiling (the biggest machine you can rent), cost rises steeply near the top, and it's still **one machine**, so if it dies, everything is down. That's called a **single point of failure** (SPOF).
+
+## Option 2: horizontal scaling ("scale out")
+Add more machines of the same size and spread the work across them.
+- **Pros:** practically no ceiling; if one machine dies, the others keep serving (redundancy); you can add or remove machines as traffic changes (**autoscaling**).
+- **Cons:** you now need something to spread the work (a **load balancer**), and the machines must be able to answer *any* request, which leads to the stateless idea.
+
+## What "stateless" means
+**State** is information a server remembers between requests: who is logged in, what's in a shopping cart, a file a user uploaded, a WebSocket connection.
+
+- A **stateful** server keeps that information in its own memory or disk. If Alice's cart lives in server A's memory, her next request *must* go to server A. If server A restarts, the cart is gone. You can't freely add/remove servers or send requests anywhere.
+- A **stateless** server keeps nothing between requests. Every request carries (or points to) everything needed, and any shared data lives *outside* the server: in a database, a cache like Redis, or object storage like S3.
+
+Analogy: a stateless server is a bank teller who looks up your account in the central system every time, so any teller can help you. A stateful server is a teller who keeps your account in their own notebook, so you must always wait in their line.
+
+**Result:** stateless app servers are interchangeable. The load balancer can send each request to whichever is least busy, autoscaling can add or kill machines at will, and a crash loses nothing. This is why the standard design is **stateless services + stateful data stores**.
+
+## But the data stores still have state
+Making app servers stateless moves the hard problem to the databases. Scaling *those* uses different tools, covered in their own pages:
+- Too many reads → **caching** and **read replicas** (copies of the database).
+- Too much data or too many writes → **sharding** (splitting the data across machines).
+
+## Trade-offs
+- Vertical first is often correct. One big Postgres server handles far more than people expect. Premature horizontal scaling adds complexity for no benefit.
+- Horizontal is required for high availability (no single point of failure) even when load is low.
+
+## Say it like this in the interview
+"The API servers are stateless, so they sit behind a load balancer and autoscale on CPU or request rate. Session data lives in Redis and files in S3. The database is the real scaling concern; at our numbers a single primary with read replicas is enough, and I'd shard by user_id only if writes outgrow one machine."
+
+## Related
+[Load balancing](#/sd/concept/load-balancing) · [Caching](#/sd/concept/caching) · [Replication](#/sd/concept/replication) · [Partitioning / sharding](#/sd/concept/sharding) · [Foundations](#/sd/concept/request-path)`
+},
+{
+  id: 'load-balancing', name: 'Load balancing',
+  body: `## TL;DR
+A **load balancer** (LB) is a server that sits in front of a group of identical servers and decides which one handles each incoming request.
+
+## Why it matters
+Horizontal scaling only works if traffic is spread out. The LB also hides individual servers from clients: clients talk to one address, and servers can be added, removed or replaced behind it.
+
+## How it works
+1. Clients send requests to the LB's address.
+2. The LB keeps a list of healthy backend servers. It finds out who is healthy with **health checks**: it pings each server (e.g. \`GET /health\`) every few seconds and stops sending traffic to any that fail.
+3. For each request, it picks a server using an algorithm and forwards the request.
+
+## Algorithms
+- **Round robin**: take turns: A, B, C, A, B, C. Simple; assumes all requests cost the same.
+- **Least connections**: send to the server currently handling the fewest requests. Better when some requests are slow.
+- **Hash-based** (e.g. hash of user id or IP): the same user always goes to the same server. Useful when a server caches per-user data or holds that user's WebSocket. See [Consistent hashing](#/sd/concept/consistent-hashing).
+
+## Layer 4 vs Layer 7 (network layers)
+- **L4** LBs look only at network-level info (IP address and port). Very fast, but can't route by URL.
+- **L7** LBs understand HTTP. They can route \`/api/*\` to one group and \`/images/*\` to another, read headers and cookies, and terminate TLS (decrypt HTTPS once at the edge).
+
+## Key terms
+- **Sticky sessions**: the LB pins a user to one server (via a cookie). Needed for stateful servers; avoid when possible because a server crash then hurts those users.
+- **API gateway**: an L7 entry point with extra features: authentication, rate limiting, request routing to different microservices. Often drawn as the same box as the LB.
+- **Reverse proxy**: general term for a server that receives requests on behalf of backend servers (an LB is one kind).
+
+## Say it like this in the interview
+You usually just draw it and say one line: "Client → API gateway / load balancer → stateless service instances." Go deeper only for long-lived connections (WebSockets), where you'd mention L4 or hash-based routing so a user's connection stays put.
+
+## Related
+[Scaling](#/sd/concept/scaling) · [Consistent hashing](#/sd/concept/consistent-hashing) · [Real-time updates](#/sd/concept/realtime)`
+},
+{
+  id: 'consistent-hashing', name: 'Consistent hashing',
+  body: `## TL;DR
+**Consistent hashing** is a way to assign keys (like user ids) to servers so that adding or removing a server only moves a small fraction of keys, instead of almost all of them.
+
+## The problem it solves
+The obvious approach is \`server = hash(key) % N\` where N is the number of servers. A **hash function** turns any input into a big, evenly spread number, so keys spread evenly. But when N changes from 4 to 5, \`% N\` gives a different answer for about 80% of keys. For a cache, that means 80% misses at once; for a database, moving 80% of the data.
+
+## How it works
+1. Imagine a circle of numbers (the "ring"), e.g. 0 to 2³²−1.
+2. Hash each **server** onto a point on the ring.
+3. Hash each **key** onto the ring and walk clockwise; the first server you meet owns that key.
+4. Add a server: it takes over only the keys between it and the previous server. Everyone else is untouched. Remove one: only its keys move to the next server.
+
+**Virtual nodes:** each physical server is placed on the ring many times (say 100 points). This spreads load evenly and, when a server leaves, its keys spread across many servers instead of dumping onto one neighbor.
+
+## Where you'll mention it
+Distributed caches (which cache node holds this key?), sharded databases (DynamoDB and Cassandra use it internally), routing WebSocket users to connection servers, and load balancers that want the same user on the same server.
+
+## Related
+[Partitioning / sharding](#/sd/concept/sharding) · [Caching](#/sd/concept/caching) · [Load balancing](#/sd/concept/load-balancing)`
+},
+{
+  id: 'databases', name: 'Databases: SQL vs NoSQL, transactions, data modeling',
+  body: `## TL;DR
+A **database** is a program that stores data durably (it survives crashes and restarts) and lets you query it efficiently; choosing one is about matching its strengths to how your data is shaped and accessed.
+
+## Relational (SQL) databases
+Examples: PostgreSQL, MySQL.
+- Data lives in **tables** with rows and columns, and a fixed **schema** (the declared columns and types).
+- Tables reference each other with **foreign keys** (a booking row stores the user_id of its user). **Joins** combine related rows in one query.
+- **SQL** is the query language: \`SELECT * FROM bookings WHERE user_id = 42\`.
+- Strong support for **transactions**.
+
+## What a transaction is (and ACID)
+A **transaction** groups several reads/writes so they behave like one all-or-nothing operation. Moving $10 from A to B is two writes; a transaction guarantees you never end up with only one of them applied.
+
+ACID describes the guarantees:
+- **Atomicity**: all of it happens or none of it does.
+- **Consistency**: the database's rules (constraints like "balance ≥ 0", "email is unique") are never violated.
+- **Isolation**: concurrent transactions don't see each other's half-finished work. (There are levels; stricter ones are safer but slower.)
+- **Durability**: once it says "committed", the data survives a crash (it's been written to disk / a log).
+
+## NoSQL databases
+"Not only SQL": a family of stores that give up some relational features for scale or flexibility.
+- **Key-value** (Redis, DynamoDB): look up a value by its key, extremely fast.
+- **Wide-column** (Cassandra, DynamoDB tables with sort keys): rows grouped by a **partition key**, sorted by a **sort key** inside the partition. Great for "latest 50 messages in chat X".
+- **Document** (MongoDB): store JSON-like documents with flexible fields.
+- **Graph** (Neo4j): nodes and edges for relationship-heavy queries.
+
+They typically scale writes horizontally out of the box, but joins are limited or absent and you must design tables around the exact queries you'll run.
+
+## How to choose
+- Default to **Postgres**: relational data, need for transactions, flexible future queries. It scales much further than its reputation (vertical scaling, read replicas, partitioning).
+- Pick **DynamoDB/Cassandra** when you have enormous write volume, simple key-based access patterns known up front, and can live without joins.
+- Interviewers mostly want a justified choice, not a specific answer.
+
+## Data modeling in an interview
+1. List your core entities (User, Event, Ticket).
+2. For each, the few fields that matter and the **primary key** (the unique id of a row).
+3. Note the relationships (one event has many tickets).
+4. Note the main queries and the **indexes** needed to make them fast (next page).
+
+## Related
+[Database indexes](#/sd/concept/indexing) · [Replication](#/sd/concept/replication) · [Partitioning / sharding](#/sd/concept/sharding) · [Consistency, availability and CAP](#/sd/concept/consistency) · [Contention](#/sd/concept/contention)`
+},
+{
+  id: 'indexing', name: 'Database indexes',
+  body: `## TL;DR
+An **index** is an extra data structure the database maintains so it can find rows matching a condition without reading the whole table, like the index at the back of a book.
+
+## Why it matters
+Without an index, \`WHERE email = 'a@b.com'\` makes the database read every row (a **full table scan**): fine for 1,000 rows, terrible for 1 billion. With an index it's a handful of reads.
+
+## How it works
+- **B-tree index** (the default in Postgres/MySQL): a sorted, balanced tree of the indexed column's values, each pointing to its row. Finding a value takes O(log n) steps. Because it's sorted, it also serves range queries (\`created_at > yesterday\`) and ORDER BY.
+- **Composite index** on (a, b): sorted by a, then by b within each a. Serves queries on \`a\` or \`a AND b\`, but not on \`b\` alone (like a phone book sorted by last name then first name can't find all "Toms").
+- **Hash index**: exact-match only, very fast.
+- **Inverted index**: maps each word → documents containing it. Powers full-text search (Elasticsearch).
+- **Geospatial index**: finds points near a location (geohash, R-tree, PostGIS).
+
+## The cost
+Every index must be updated on every insert/update, so indexes make **writes slower** and use extra storage. Index the columns you actually filter or sort by.
+
+## LSM trees (why some databases write so fast)
+Cassandra, RocksDB and DynamoDB's storage use **log-structured merge trees**: writes go to memory and an append-only log, then get flushed to sorted files on disk and merged ("compacted") in the background. Appending is much faster than updating a B-tree in place, at the cost of reads sometimes checking several files.
+
+## Say it like this in the interview
+"Tickets table with an index on (event_id, status) so 'available seats for this event' is a fast index lookup instead of a scan."
+
+## Related
+[Databases](#/sd/concept/databases) · [Search and location queries](#/sd/concept/search)`
 },
 {
   id: 'caching', name: 'Caching',
-  body: `**Where:** browser/HTTP cache → CDN → API gateway → app (in-process) → distributed cache (Redis/Memcached) → DB buffer cache.
+  body: `## TL;DR
+A **cache** is a small, fast storage layer that keeps copies of frequently used data so you don't have to fetch or compute it from the slower original source every time.
 
-**Patterns:**
-- **Cache-aside** (most common): read cache → miss → read DB → populate with TTL. Invalidate (delete) on write.
-- **Write-through**: write cache and DB together. Fresh, slower writes.
-- **Write-behind**: write cache, flush to DB async. Fast, risk of loss.
+## Why it matters
+Reading from memory takes microseconds; a database query that hits disk or does real work takes milliseconds or more. If 1,000 users load the same popular event page, computing it once and serving 999 copies from a cache saves the database and makes the page fast.
 
-**Problems to name:**
-- **Stale data**: TTLs + delete-on-write. Delete, don't update, to avoid races.
-- **Thundering herd / stampede**: a hot key expires, thousands hit the DB. Fix: request coalescing (single-flight), lock-on-miss, jittered TTLs, background refresh.
-- **Hot keys**: one celebrity key overwhelms one node. Fix: replicate the key with suffixes (key#1…key#N) and read a random one; in-process cache in front.
-- **Eviction**: LRU is the default; LFU for skewed popularity.
+## Key terms
+- **Cache hit**: the data was in the cache. **Cache miss**: it wasn't, so you go to the source.
+- **Hit rate**: the share of requests that are hits. 95%+ is typical for a good cache.
+- **TTL** (time to live): how long an entry stays before it's considered expired.
+- **Eviction**: removing entries when the cache is full. **LRU** (least recently used) evicts whatever hasn't been touched longest; **LFU** evicts the least frequently used.
+- **Stale data**: the cache holds an old copy after the source changed.
+- **Invalidation**: removing or updating cached copies when the source changes. Famously one of the hardest problems in computing.
 
-**Say what you cache, its key, its TTL, and how it's invalidated.**`
-},
-{
-  id: 'sharding', name: 'Partitioning / Sharding',
-  body: `Split data across machines when one can't hold the data or the write load.
+## Where caches live (closest to the user first)
+1. **Browser cache**: the user's own device keeps files, controlled by HTTP headers like \`Cache-Control\`.
+2. **CDN**: servers around the world keep copies of static files and media near users (see [Large files](#/sd/concept/blobs)).
+3. **Application memory**: a variable/map inside the server process. Fastest, but each server has its own copy and it's lost on restart.
+4. **Distributed cache** (Redis, Memcached): a separate shared in-memory server all app servers use. The usual "cache" box in diagrams.
+5. The database itself caches hot pages in memory.
 
-**Choose the shard key by access pattern:** queries should hit one shard. Messages → shard by conversation_id. Tweets → by user_id (writes) but feeds are read by follower… which is why fan-out exists.
+## Caching strategies
+- **Cache-aside** (most common): the app checks the cache; on a miss it reads the database, then stores the result in the cache with a TTL. On writes, the app updates the database and **deletes** the cached entry so the next read refills it.
+- **Write-through**: every write goes to the cache and the database together. Cache is always fresh; writes are slower.
+- **Write-behind** (write-back): write to the cache now, flush to the database later. Very fast writes; risk of losing data if the cache dies.
 
-**Strategies:**
-- **Hash** (even spread, no range queries). Use **consistent hashing** or many virtual shards so adding nodes moves little data.
-- **Range** (time, alphabetical; great for range scans, risk of hot shards, e.g. "today").
-- **Directory / lookup** (flexible, extra hop).
+## Classic problems and fixes
+- **Stale reads**: use short TTLs and delete-on-write. Delete rather than update, because two concurrent updates can land in the wrong order.
+- **Cache stampede** (thundering herd): a very popular key expires and thousands of requests miss at once and all hit the database. Fixes: let only one request rebuild it while others wait (**request coalescing**), refresh popular keys in the background before they expire, add random **jitter** to TTLs so keys don't all expire together.
+- **Hot key**: one key gets so much traffic that the single cache server holding it is overwhelmed. Fixes: keep a tiny copy in each app server's memory, or store copies under several keys (\`key#1…key#5\`) and read a random one.
 
-**Problems:** hot partitions (celebrity user, viral event) → add a random suffix to spread writes, aggregate on read; cross-shard queries and transactions → avoid by design, or use scatter-gather; resharding → plan with virtual shards.`
+## Say it like this in the interview
+Always state four things: **what** you cache, the **key**, the **TTL**, and **how it's invalidated**. "Cache the rendered event page in Redis keyed by event_id with a 60-second TTL; booking changes delete the key."
+
+## Related
+[Scaling](#/sd/concept/scaling) · [Consistency, availability and CAP](#/sd/concept/consistency) · [Large files](#/sd/concept/blobs) · [Partitioning / sharding](#/sd/concept/sharding)`
 },
 {
   id: 'replication', name: 'Replication',
-  body: `- **Leader-follower**: writes to leader, reads from replicas. Replication lag = stale reads. Failover promotes a follower (risk of losing un-replicated writes if async).
-- **Multi-leader**: multi-region writes; needs conflict resolution (last-write-wins, CRDTs).
-- **Leaderless** (Dynamo/Cassandra): quorum reads/writes, R + W > N for overlap.
+  body: `## TL;DR
+**Replication** means keeping copies of the same data on multiple machines so you can survive a machine dying and serve more reads.
 
-Sync vs async replication: sync = durable, slower writes; async = fast, can lose recent writes on failover. Many systems do "semi-sync": one sync replica.`
+## Why it matters
+- **Durability & availability**: if the only copy's disk dies, data is gone and the app is down. With replicas, another machine takes over.
+- **Read scaling**: reads can be spread across copies.
+- **Latency**: copies in other regions are closer to users there.
+
+## Leader–follower (the common setup)
+Also called primary–replica or master–slave.
+- One **leader** accepts all writes.
+- The leader streams its changes to **followers** (read replicas), which apply them.
+- Reads can go to followers. If the leader dies, a follower is promoted (**failover**).
+
+## Synchronous vs asynchronous replication
+- **Synchronous**: the leader waits until a follower confirms before saying "done". No data loss on failover, but every write is slower, and a slow follower slows everything.
+- **Asynchronous**: the leader says "done" immediately and ships changes in the background. Fast, but followers are slightly behind.
+
+**Replication lag** is that "slightly behind". It causes a classic bug: a user updates their profile (goes to the leader), then reloads (reads from a follower that hasn't caught up) and sees the old value. Fix with **read-your-writes**: send a user's reads to the leader for a few seconds after they write, or have the client show its own optimistic update.
+
+## Other setups (name-level knowledge)
+- **Multi-leader**: several leaders (e.g. one per region) accept writes; conflicts must be resolved (last write wins, or merge rules).
+- **Leaderless** (Cassandra, DynamoDB): write to several replicas and read from several; if write count W + read count R > total copies N, a read is guaranteed to see the latest write (a **quorum**).
+
+## Related
+[Consistency, availability and CAP](#/sd/concept/consistency) · [Partitioning / sharding](#/sd/concept/sharding) · [Reliability, availability and observability](#/sd/concept/observability)`
 },
 {
-  id: 'indexing', name: 'Database indexing & data modeling',
-  body: `**B-tree indexes** (Postgres default): equality and range queries, ordered. Composite index (a, b) serves queries on a, and a+b, not b alone. Every index slows writes.
-**LSM trees** (Cassandra, RocksDB, DynamoDB internally): fast writes, compaction in the background.
-**Specialized:** inverted index (full-text, Elasticsearch), geospatial (geohash, quadtree, PostGIS, Redis GEO), hash index.
+  id: 'sharding', name: 'Partitioning / sharding',
+  body: `## TL;DR
+**Sharding** (or partitioning) splits one dataset across several machines, each holding a subset of the rows, so no single machine has to store or write everything.
 
-**SQL vs NoSQL in one sentence each:**
-- Postgres: relational data, transactions, flexible queries, scales further than people think. Default choice.
-- DynamoDB/Cassandra: massive write throughput and predictable key-based access patterns you know up front; you design tables around queries.
+## Why it matters
+Replication copies *all* data to each machine, so it doesn't help when the data is too big for one machine or when writes are too many for one leader. Sharding divides the data itself.
 
-**Say:** "Postgres, with an index on (event_id, status) to serve the availability query."`
+## Key terms
+- **Shard**: one of the pieces (and the machine(s) holding it). Each shard usually has its own replicas too.
+- **Shard key / partition key**: the field used to decide which shard a row lives on (e.g. user_id).
+- **Hot shard / hot partition**: one shard gets far more traffic than the rest.
+- **Cross-shard query**: a query that needs data from several shards; slower and more complex.
+
+## How rows are assigned
+- **Hash-based**: shard = hash(key) → spreads evenly. Can't do efficient range queries across keys. Use consistent hashing so adding shards moves little data.
+- **Range-based**: users A–M on shard 1, N–Z on shard 2, or by date. Great for range scans, but ranges can get uneven (all of "today's" writes land on one shard).
+- **Directory-based**: a lookup table says where each key lives. Flexible, but it's one more thing to query and keep available.
+
+## Choosing a shard key (the important part)
+Pick the key so **the most common queries touch exactly one shard** and load spreads evenly.
+- Chat messages → conversation_id (a conversation's messages are read together).
+- Orders → customer_id (a customer views their orders).
+- Bad: a key with a few values (country), or one where one value is huge (a celebrity's user_id for likes).
+
+## Fixing hot shards
+Add a random suffix to hot keys (\`post123#0\`…\`post123#9\`) to spread writes over 10 shards, and combine the pieces when reading.
+
+## Say it like this in the interview
+Don't shard by reflex. Do the math: if one Postgres primary can handle your writes and data size, say so. Shard when numbers demand it, and justify the key: "Shard messages by conversation_id, since nearly every query is 'messages in this conversation'."
+
+## Related
+[Consistent hashing](#/sd/concept/consistent-hashing) · [Replication](#/sd/concept/replication) · [Databases](#/sd/concept/databases)`
 },
 {
-  id: 'queues', name: 'Queues, streams & async processing',
-  body: `**Message queue** (SQS, RabbitMQ): work items, each consumed once, deleted after ack. Good for jobs.
-**Log/stream** (Kafka, Kinesis): ordered, retained, replayable, multiple consumer groups each read everything. Ordering is **per partition**; pick the partition key accordingly.
+  id: 'consistency', name: 'Consistency, availability and CAP',
+  body: `## TL;DR
+**Consistency** asks "does every reader see the latest write?", and in a distributed system you sometimes have to choose between always showing the latest data and always answering at all.
 
-**Why add one:**
-- Decouple producer from slow consumer, absorb spikes (buffer)
-- Retries without blocking the user
-- Fan-out to multiple consumers
+## Some background
+Once data is replicated across machines, copies can briefly disagree (replication lag). Also, networks fail: machines can be running but unable to reach each other. That's a **network partition**.
 
-**Things to mention:**
-- **At-least-once** delivery is the norm → consumers must be **idempotent**.
-- **Dead-letter queue** for poison messages.
-- **Backpressure** and consumer lag monitoring.
-- **Outbox pattern**: write the DB row and an "outbox" row in one transaction; a relay publishes to Kafka. Avoids "DB committed but event lost".
+## CAP theorem in plain words
+During a network partition, a system must pick one:
+- **Consistency (C)**: refuse or delay some requests so no one reads stale data.
+- **Availability (A)**: keep answering every request, even if some answers are stale.
+(P, partition tolerance, isn't optional: networks do fail.)
 
-**Don't** add a queue when the user needs the result synchronously and the work is fast.`
+So in practice CAP is "when things break, do we prefer correct or responsive?"
+
+## Choose per feature, not per system
+- Needs **strong consistency** (correct over available): booking the last seat, money balances, inventory, unique usernames, revoking access.
+- Fine with **eventual consistency** (available over correct; copies converge within seconds): like counts, view counts, feeds, search results, profile pictures.
+
+## Consistency levels you can name
+- **Strong / linearizable**: every read sees the most recent write, as if there were one copy.
+- **Eventual**: if writes stop, all copies eventually agree. Reads in between may be stale.
+- **Read-your-writes**: you always see your own changes, even if others see them later.
+- **Monotonic reads**: you never see data go "back in time" between two reads.
+
+## Say it like this in the interview
+Put it in your non-functional requirements, per feature: "Strong consistency for seat booking so we never double-sell; eventual consistency is fine for event search and the seat map display." Then show how the design delivers it (a transaction on one primary for bookings; cache and search index for browsing).
+
+## Related
+[Replication](#/sd/concept/replication) · [Contention](#/sd/concept/contention) · [Databases](#/sd/concept/databases)`
+},
+{
+  id: 'queues', name: 'Queues, streams and async processing',
+  body: `## TL;DR
+A **message queue** is a buffer between two parts of a system: one side drops work items in, the other side takes them out and processes them at its own pace.
+
+## Synchronous vs asynchronous
+- **Synchronous**: the caller waits for the answer ("charge the card, tell me if it worked").
+- **Asynchronous**: the caller hands off the work and moves on ("send this welcome email eventually"). The user gets a fast response; the work happens in the background.
+
+## Why add a queue
+- **Absorb spikes**: 50,000 requests arrive in one second; workers chew through them over a minute instead of crashing.
+- **Decouple**: the producer doesn't need the consumer to be up right now; if the email service is down for 5 minutes, messages wait.
+- **Retry**: failed work goes back on the queue instead of being lost.
+- **Fan-out**: one event ("order placed") can be consumed by several services (email, analytics, warehouse).
+
+## Key terms
+- **Producer**: puts messages in. **Consumer** (or worker): takes them out and processes them.
+- **Acknowledge (ack)**: the consumer tells the queue "done, delete it". If it crashes before acking, the message is redelivered.
+- **At-least-once delivery**: every message is delivered, but possibly more than once (after a crash before the ack). This is the normal guarantee, which is why consumers must be **idempotent** (see [Idempotency](#/sd/concept/idempotency)).
+- **Dead-letter queue (DLQ)**: where messages go after failing N times, so one bad message ("poison pill") doesn't block everything. Someone inspects them later.
+- **Backpressure**: slowing producers down when consumers can't keep up.
+- **Consumer lag**: how far behind consumers are; the key metric to monitor and autoscale on.
+
+## Queue vs log/stream
+- **Queue** (SQS, RabbitMQ): each message goes to one consumer and is deleted after ack. Think "to-do list for workers".
+- **Log / stream** (Kafka, Kinesis): messages are appended to an ordered log and **kept** for days. Multiple independent consumer groups each read the whole log at their own position, and can re-read (**replay**) history. Think "a shared ledger of everything that happened". Order is guaranteed only within a **partition** (one slice of the log), so you pick a partition key like user_id.
+
+## The outbox pattern
+Problem: you save an order to the database and then publish "order placed" to Kafka. If the app crashes between the two, the event is lost. Fix: in the **same database transaction**, also insert the event into an "outbox" table; a separate process reads the outbox and publishes. Now either both happen or neither.
+
+## When not to use one
+When the user needs the result right now and the work is quick (e.g. loading their profile). Queues add delay and moving parts.
+
+## Related
+[Idempotency and retries](#/sd/concept/idempotency) · [Real-time updates](#/sd/concept/realtime) · [Reliability, availability and observability](#/sd/concept/observability)`
 },
 {
   id: 'realtime', name: 'Real-time updates: polling, SSE, WebSockets',
-  body: `| Option | Use when |
-|---|---|
-| Short polling | Updates are rare; simplest; fine for "is my export ready?" |
-| Long polling | Fallback where WebSockets are blocked |
-| **SSE** | Server → client only (feeds, live scores, notifications, LLM token streaming). Plain HTTP, auto-reconnect |
-| **WebSockets** | Bidirectional, low latency (chat, multiplayer, collaborative editing, live bidding) |
-| WebRTC | Peer-to-peer audio/video |
+  body: `## TL;DR
+Real-time features need the **server to tell the client** something happened, but HTTP was designed for the client to ask; these techniques work around that.
 
-**Server side of real-time** is the real interview question: a client is connected to *one* of many servers. How does an event reach it?
-- **Pub/sub** (Redis pub/sub, Kafka): each connection server subscribes to channels for the users/rooms it holds.
-- **Connection registry**: map user → server in Redis; route messages to that server.
-- Use **L4/consistent-hash load balancing** for sticky long-lived connections; plan for reconnect storms (jittered backoff).`
+## The options, from simplest
+- **Short polling**: the client asks every N seconds, "anything new?" Simple, but wasteful and delayed by up to N seconds. Fine for "is my export ready?"
+- **Long polling**: the client asks, and the server holds the request open until there's news (or ~30 s pass), then the client immediately asks again. Near real-time over plain HTTP.
+- **Server-Sent Events (SSE)**: the client opens one HTTP connection and the server keeps sending events down it. One direction only (server → client), auto-reconnects. Great for feeds, notifications, live scores, streaming LLM tokens.
+- **WebSockets**: an HTTP connection is "upgraded" into a persistent two-way channel. Both sides can send any time with little overhead. Needed for chat, multiplayer games, collaborative editing, live bidding.
+- **WebRTC**: peer-to-peer connections between browsers, mostly for audio/video calls.
+
+## The real interview question: the server side
+With WebSockets or SSE, each user is connected to **one** of many servers. When Bob sends Alice a message, Bob's request lands on server 3, but Alice's connection is on server 7. How does it get there?
+1. **Pub/sub** (publish/subscribe): every connection server subscribes to channels for the users or rooms it has connected (Redis pub/sub, Kafka). Server 3 *publishes* "message for Alice" to Alice's channel; server 7, *subscribed* to it, receives it and pushes it down Alice's socket.
+2. **Connection registry**: a shared map (in Redis) of user → server. Server 3 looks up Alice → server 7 and forwards directly.
+
+## Other things to mention
+- Long-lived connections are stateful, so the load balancer must keep them pinned and you need to handle **reconnects** (e.g. after a deploy, every client reconnects at once; add random delay, "jitter").
+- Clients that were offline need to **catch up**: on reconnect, send "last message id I saw" and fetch what was missed from the database.
+- **Presence** ("online now"): clients send heartbeats; a key in Redis with a short TTL expires if they stop.
+
+## Related
+[Queues, streams and async processing](#/sd/concept/queues) · [Load balancing](#/sd/concept/load-balancing) · [Scaling](#/sd/concept/scaling)`
 },
 {
-  id: 'idempotency', name: 'Idempotency, retries & exactly-once',
-  body: `Networks fail mid-request; clients retry. Without idempotency, retries double-charge or double-book.
+  id: 'idempotency', name: 'Idempotency and retries',
+  body: `## TL;DR
+An operation is **idempotent** if doing it twice has the same effect as doing it once, which makes it safe to retry.
 
-- Client generates an **idempotency key** (UUID) per logical operation; server stores key → result; repeated keys return the stored result.
-- Use **unique constraints** as a safety net (e.g. unique (user_id, idempotency_key)).
-- Consumers of at-least-once queues dedupe by message id or make the operation naturally idempotent (\`SET status = 'paid'\` not \`balance += 10\`).
-- "Exactly-once" in practice = at-least-once delivery + idempotent processing.
+## Why it matters
+Networks fail in an ugly way: a request can succeed on the server, but the response gets lost. The client sees a timeout and doesn't know whether it worked. The safe thing is to retry, but a retried "charge $50" charges twice. Queues cause the same problem: at-least-once delivery can hand the same message to a worker twice.
 
-**Retries:** exponential backoff + jitter, cap attempts, only retry retryable errors (timeouts, 503), circuit breakers to avoid hammering a sick dependency.`
+## Examples
+- Idempotent: "set status to PAID", "delete item 7", "set balance to 100", HTTP PUT and DELETE (by convention).
+- Not idempotent: "add $10 to balance", "create a new order", HTTP POST.
+
+## Making a non-idempotent operation safe: idempotency keys
+1. The client generates a unique id for the *intent* (e.g. a UUID when the user taps "Pay") and sends it with the request, often as an \`Idempotency-Key\` header.
+2. The server records key → result in a table with a **unique constraint** on the key.
+3. If the same key arrives again, the server returns the saved result instead of doing the work again.
+Stripe's API works exactly like this.
+
+## Retries done right
+- Retry only errors that might succeed next time (timeouts, 503 "service unavailable"), not "invalid card" (400s).
+- **Exponential backoff**: wait 100 ms, 200 ms, 400 ms… so you don't hammer a struggling service.
+- **Jitter**: add randomness to waits so thousands of clients don't retry in lockstep.
+- Cap the number of attempts.
+- **Circuit breaker**: if a dependency keeps failing, stop calling it for a while (fail fast) and let it recover.
+
+## "Exactly once"
+Truly exactly-once delivery isn't achievable over unreliable networks. The practical recipe is **at-least-once delivery + idempotent processing = exactly-once effect**. Say it that way in interviews.
+
+## Related
+[Queues, streams and async processing](#/sd/concept/queues) · [Contention](#/sd/concept/contention) · [Reliability, availability and observability](#/sd/concept/observability)`
 },
 {
-  id: 'contention', name: 'Contention: locks, transactions, optimistic concurrency',
-  body: `Two users want the last seat.
+  id: 'contention', name: 'Contention: two users, one seat',
+  body: `## TL;DR
+**Contention** is when multiple requests try to change the same thing at the same time, and the system must make sure only one wins correctly.
 
-1. **DB transaction with row lock**: \`SELECT … FOR UPDATE\` then update. Simple, correct, holds locks briefly.
-2. **Optimistic concurrency**: version column; \`UPDATE … SET status='booked', version=v+1 WHERE id=? AND version=v\`; 0 rows updated → someone else won, retry or fail. Great when conflicts are rare.
-3. **Conditional write** in NoSQL (DynamoDB condition expressions).
-4. **Distributed lock** (Redis SET NX PX with TTL) for holds spanning minutes (Ticketmaster seat reservation for checkout). TTL guarantees release if the client disappears.
-5. **Queue / serialize** all writes for a hot item through one worker (e.g. auction bids per item).
+## The bug you're preventing (a race condition)
+Two people click "book seat 12A" at the same instant:
+1. Request A reads seat 12A: available.
+2. Request B reads seat 12A: available.
+3. A writes "booked by A". B writes "booked by B".
+Both got a confirmation. That's a **race condition**: the outcome depends on timing, and here it's wrong.
 
-**Say the isolation level** when relevant: Postgres default is Read Committed; Serializable prevents write skew at the cost of retries.`
+## Fixes, simplest first
+1. **Pessimistic locking (row lock)**: inside a transaction, \`SELECT … FOR UPDATE\` locks the row; B's transaction waits until A commits, then sees "booked" and fails cleanly. Simple and correct; locks must be short.
+2. **Optimistic concurrency control (OCC)**: no lock. Each row has a **version** number. Update with a condition: \`UPDATE seats SET status='booked', version=6 WHERE id='12A' AND version=5\`. If someone else changed it first, zero rows update; you retry or report "taken". Best when conflicts are rare.
+3. **Atomic conditional write**: same idea in one statement, \`UPDATE … WHERE status='available'\`. DynamoDB calls these condition expressions.
+4. **Reservation with expiry**: for holds that last minutes (checkout), mark the seat "held until 12:10" or use a Redis lock with a **TTL** (SET key NX EX 600: set only if not exists, expire in 600 s). The expiry guarantees release if the user walks away.
+5. **Serialize through a queue**: send all actions for a hot item (one auction) through one worker in order. No conflicts by design, at the cost of throughput per item.
+
+## Key terms
+- **Lock**: permission held by one actor to modify something; others wait.
+- **Deadlock**: two transactions each wait on a lock the other holds. Databases detect and abort one.
+- **Distributed lock**: a lock shared across machines (Redis, ZooKeeper). Needs a TTL so a crashed holder doesn't block forever.
+- **Isolation level**: how strictly a database separates concurrent transactions. Postgres defaults to Read Committed; Serializable is strictest.
+
+## Say it like this in the interview
+Name the unit of contention ("a seat"), the mechanism ("conditional update in a transaction"), what the loser sees ("seat taken, here are nearby seats"), and how holds expire.
+
+## Related
+[Databases](#/sd/concept/databases) · [Consistency, availability and CAP](#/sd/concept/consistency) · [Idempotency and retries](#/sd/concept/idempotency)`
 },
 {
-  id: 'blobs', name: 'Large files: blob storage, presigned URLs, CDN',
-  body: `Never stream large files through your app servers.
+  id: 'blobs', name: 'Large files: blob storage, presigned URLs, CDNs',
+  body: `## TL;DR
+Big files (images, video, documents) go in **object storage** like Amazon S3, not in your database or through your app servers, and users fetch them via a **CDN** close to them.
 
-- Store bytes in **S3/GCS**; store metadata (owner, size, status, key) in the DB.
-- **Upload**: client asks API for a **presigned URL**, uploads directly to S3. For big files use **multipart upload** (chunks of 5–100 MB, parallel, resumable). S3 event → mark upload complete.
-- **Download**: presigned GET URL or a **CDN** in front of the bucket with signed cookies/URLs.
-- **Processing** (thumbnails, transcoding, virus scan): S3 event → queue → workers.
+## Key terms
+- **Blob** (binary large object): any file treated as an opaque chunk of bytes.
+- **Object storage** (S3, Google Cloud Storage): a service storing files under keys (\`videos/123/raw.mp4\`). Practically unlimited, cheap, extremely durable. Not a filesystem or a database.
+- **Metadata**: facts about the file (owner, size, name, status, its S3 key). Lives in your database.
+- **Presigned URL**: a temporary URL your server creates that lets *one* client upload or download *one* specific object directly to/from S3 for a few minutes, without having S3 credentials.
+- **Multipart upload**: splitting a large file into parts (e.g. 10 MB each) uploaded in parallel and retried individually; the upload can resume after a dropped connection.
+- **CDN** (content delivery network): a worldwide network of cache servers ("edge locations"). The first user in Tokyo fetches a file from your origin; later Tokyo users get it from the nearby edge. Lower latency, far less load on your servers.
 
-Mention: content hashing for dedupe, chunk-level sync (Dropbox), lifecycle rules to cheaper storage classes.`
+## The standard flow
+**Upload**
+1. Client: "I want to upload a 2 GB video." → your API.
+2. API creates a metadata row (status: uploading) and returns presigned URL(s).
+3. Client uploads **directly to S3**, in parts.
+4. S3 notifies your system when done (an event) → mark status ready, start processing (thumbnails, transcoding, virus scan) via a queue.
+
+**Download**
+Client asks your API for the file → API checks permissions → returns a CDN URL (signed if private) → bytes come from the CDN.
+
+## Why not send files through your servers?
+They'd spend their memory, CPU and bandwidth just shuttling bytes, and a 2 GB upload would tie up a server for minutes. S3 and CDNs are built for exactly this.
+
+## Related
+[Caching](#/sd/concept/caching) · [Queues, streams and async processing](#/sd/concept/queues)`
 },
 {
-  id: 'search', name: 'Search & geospatial',
-  body: `**Full-text search**: inverted index (term → doc ids). Elasticsearch/OpenSearch, or Postgres full-text + trigram for modest scale. Keep it in sync via **CDC** (change data capture from the DB's WAL) into the search index; it's eventually consistent.
+  id: 'search', name: 'Search and location queries',
+  body: `## Full-text search
+**Problem:** "find events whose name contains 'taylor'" with \`LIKE '%taylor%'\` scans every row; it doesn't handle typos, word forms or relevance ranking.
 
-**Geospatial ("drivers near me")**: geohash (string prefixes = nearby cells), quadtree (adaptive density), or Redis GEO / PostGIS. Frequent location updates (every few seconds) favor an in-memory store like Redis over a disk index.
+**Inverted index:** like a book's index: for each word, the list of documents containing it. Searching "taylor swift" = look up both words' lists and intersect. Search engines (**Elasticsearch / OpenSearch**) build these, plus ranking by relevance, typo tolerance (fuzzy matching) and filters.
 
-**Typeahead**: precomputed prefix → top-k suggestions, served from memory/CDN-cacheable responses.`
+**Keeping it in sync:** the database stays the **source of truth** (the authoritative copy). Changes flow to the search index through **CDC** (change data capture: a process reads the database's internal change log and forwards each change). The index is a few seconds behind, which is fine for search.
+
+For modest scale, Postgres has built-in full-text search and trigram indexes; mention it as the simpler option.
+
+## Location ("near me") queries
+**Problem:** "drivers within 2 km" can't be done efficiently with a normal index on latitude and longitude separately.
+
+- **Geohash**: encode a lat/long into a string where nearby places share a prefix (e.g. \`dr5ru\` covers a few blocks of Manhattan). "Nearby" becomes "same prefix", which a normal index handles.
+- **Quadtree**: recursively split the map into 4 squares until each square has few points. Dense cities get small squares; oceans stay big.
+- **Tools**: Redis GEO commands (great for constantly moving drivers because it's in memory), PostGIS for Postgres, Elasticsearch geo queries.
+
+## Typeahead
+Precompute, for each prefix ("ta", "tay"…), the top suggestions, and serve them from memory. See the [Typeahead walkthrough](#/sd/walk/typeahead).
+
+## Related
+[Database indexes](#/sd/concept/indexing) · [Databases](#/sd/concept/databases)`
 },
 {
-  id: 'auth', name: 'Auth, sessions & security basics',
-  body: `- **Sessions**: opaque session id in an httpOnly, Secure, SameSite cookie; session store in Redis. Easy revocation.
-- **JWT access tokens**: stateless verification, short-lived (5–15 min), paired with **refresh tokens** that rotate and can be revoked. Revocation of a JWT before expiry needs a denylist or short TTLs.
-- **OAuth 2.0 / OIDC**: Authorization Code + PKCE for browser and mobile apps; OIDC adds the ID token (who the user is).
-- **Passkeys / WebAuthn**: public-key credentials bound to the origin, phishing-resistant.
-- **Authorization**: RBAC, ABAC, ReBAC (Zanzibar-style relationships). Enforce in the service, not only the gateway.
-- **API gateway** handles authn, rate limits, routing; services still check authz.
-- Secrets in a vault/KMS, TLS everywhere, audit logs for sensitive actions.
+  id: 'auth', name: 'Authentication, sessions and tokens',
+  body: `## Two different questions
+- **Authentication (authn)**: *who are you?* Proving identity (password, passkey, Google sign-in).
+- **Authorization (authz)**: *what are you allowed to do?* Checking permissions (can this user see this account?).
 
-Deep version: see the Login & Sessions walkthrough (tuned for Betterment's API & Auth Platform team).`
+## After login: remembering who you are
+HTTP doesn't remember anything between requests, so after a successful login the server gives the client something to send with every later request.
+
+**Option 1: sessions (opaque ids)**
+- Server creates a random **session id**, stores session data (user id, expiry) in a store like Redis, and sends the id in a **cookie**.
+- Each request: look up the id → know the user.
+- **Pros:** easy to revoke (delete the session). **Cons:** a lookup on every request.
+
+**Option 2: tokens (JWT)**
+- A **JWT** (JSON Web Token) is a small JSON payload (user id, expiry, permissions) **signed** by the server's private key. Anyone with the public key can verify it wasn't tampered with, *without* a database lookup.
+- **Pros:** fast, stateless verification at any service. **Cons:** hard to revoke before it expires.
+- The usual fix: short-lived **access tokens** (5–15 minutes) + a long-lived **refresh token** used to get new access tokens. Refresh tokens are stored server-side and can be revoked.
+- **Refresh token rotation**: each use returns a new refresh token and invalidates the old one. If an old one is ever reused, someone stole it → revoke the whole chain.
+
+## Cookies, and where tokens live in a browser
+- A **cookie** is a small value the browser stores and automatically sends to the site.
+- **httpOnly** cookies can't be read by JavaScript, so a malicious injected script (**XSS**, cross-site scripting) can't steal them. Prefer them over localStorage for tokens.
+- **Secure**: only sent over HTTPS. **SameSite**: limits sending the cookie on requests started by other sites, which defends against **CSRF** (cross-site request forgery: another site tricking your browser into making a request to your bank).
+
+## OAuth 2.0 and OIDC
+- **OAuth 2.0**: a standard for letting an app act on your behalf at another service without giving it your password ("Allow this app to read your calendar?"). The app gets an access token with limited **scopes** (permissions).
+- **Authorization Code flow + PKCE**: the secure flow for browser and mobile apps. PKCE adds a one-time secret so an intercepted code is useless.
+- **OIDC** (OpenID Connect): a layer on OAuth that adds an **ID token** saying who the user is. "Sign in with Google" is OIDC.
+
+## Passkeys / WebAuthn
+Instead of a password, the device creates a **public/private key pair** for the site. The private key never leaves the device (protected by Face ID). To log in, the server sends a random challenge, the device signs it, the server checks with the public key. Phishing-resistant because keys are tied to the real website's domain.
+
+## MFA
+Multi-factor authentication: something you know (password) + something you have (phone code, passkey) or are (biometrics).
+
+## Authorization models
+- **RBAC** (role-based): users have roles (admin, viewer); roles have permissions.
+- **ABAC** (attribute-based): rules over attributes ("managers can approve expenses under $5k in their department").
+- **ReBAC** (relationship-based): permissions follow relationships ("editors of a folder can edit its documents"), like Google Zanzibar.
+
+## Related
+[Foundations](#/sd/concept/request-path) · [Caching](#/sd/concept/caching)`
 },
 {
-  id: 'observability', name: 'Reliability & observability',
-  body: `- **Redundancy**: multi-AZ deployments, replicated data stores, no single points of failure.
-- **Health checks** + autoscaling + graceful shutdown/draining for long-lived connections.
-- **Timeouts everywhere**, retries with backoff, **circuit breakers**, **bulkheads** (isolate resource pools).
-- **Rate limiting & load shedding** to protect the core.
-- **Observability**: metrics (RED: rate, errors, duration), logs with request ids, distributed tracing.
-- **Deploy safety**: canaries, feature flags, gradual rollouts, fast rollback. (Your Meta SafeChange experience fits here.)`
+  id: 'observability', name: 'Reliability, availability and observability',
+  body: `## Key terms
+- **Availability**: the share of time the system works. "Three nines" (99.9%) ≈ 8.8 hours down per year; "four nines" (99.99%) ≈ 53 minutes.
+- **SLA / SLO / SLI**: an **SLI** is a measurement (p99 latency, error rate); an **SLO** is your target for it (p99 < 300 ms); an **SLA** is a promise to customers with penalties.
+- **Single point of failure (SPOF)**: a component whose failure takes everything down.
+- **Redundancy**: running extra copies so one failure doesn't matter.
+- **Availability zone (AZ)**: a separate data center within a cloud region with its own power and network. Spreading servers across AZs survives a data center outage.
+- **Failover**: switching to a backup when the primary fails.
+
+## Techniques to make systems resilient
+- **No SPOFs**: multiple app servers across AZs, replicated databases, redundant load balancers.
+- **Timeouts** on every network call, so one slow dependency doesn't freeze everything.
+- **Retries with backoff** and **circuit breakers** (see [Idempotency](#/sd/concept/idempotency)).
+- **Bulkheads**: separate resource pools so one overloaded feature can't starve others (named after ship compartments).
+- **Rate limiting and load shedding**: reject excess requests early to protect the core.
+- **Graceful degradation**: when a non-critical part fails, hide that feature instead of failing the page (no recommendations, but checkout still works).
+
+## Observability: knowing what's happening
+- **Metrics**: numbers over time (requests/sec, error rate, latency percentiles, queue lag). Dashboards and alerts are built on these.
+- **Logs**: text records of events, ideally structured (JSON) with a **request id** so you can follow one request across services.
+- **Traces**: the timeline of one request through every service it touched, showing where time was spent.
+
+## Safe deploys
+**Canary** releases (send 1% of traffic to the new version first), **feature flags** (turn code paths on/off without deploying), gradual rollouts and fast rollback.
+
+## Related
+[Replication](#/sd/concept/replication) · [Idempotency and retries](#/sd/concept/idempotency) · [Scaling](#/sd/concept/scaling)`
+},
+{
+  id: 'estimation', name: 'Back-of-the-envelope estimation',
+  body: `## TL;DR
+Quick rough math to check whether a design choice is necessary, e.g. "does this fit on one machine?"
+
+## When to do it
+Only when the answer changes a decision. Many interviewers today prefer you skip upfront math and estimate in context: "500 GB of hot data won't fit in one Redis node, so we'll shard the cache."
+
+## The method
+1. Start from users: daily active users (DAU) × actions per user per day = actions/day.
+2. Divide by ~100,000 (seconds in a day, rounded from 86,400) to get the **average per second**.
+3. Multiply by 2–10 for **peak**.
+4. For storage: items per day × size × retention days.
+
+**Example:** 100M DAU each viewing 20 pages → 2 billion requests/day ÷ 10⁵ ≈ 20,000 req/s average, ~100,000 at peak. That's many app servers (one handles roughly 1k–10k simple req/s) but reads from a cache can absorb most of it.
+
+## Useful sizes
+- 1 KB ≈ a small JSON record; 1 MB ≈ a photo; 1 GB ≈ an hour of compressed video at moderate quality.
+- 1 billion × 1 KB = 1 TB.
+- A single database server comfortably holds several TB.
+- See [Numbers worth knowing](#/sd/guide/numbers) in Start here for latency and capacity numbers.
+
+## Related
+[Scaling](#/sd/concept/scaling) · [Foundations](#/sd/concept/request-path)`
 }
 ];
 
+
 var SD_TECH = [
-{ id: 'postgres', name: 'PostgreSQL (relational DB)', body: `**Reach for it by default.** ACID transactions, joins, rich indexes (B-tree, GIN for JSONB/full-text, GiST/PostGIS for geo), \`SELECT … FOR UPDATE\`, unique constraints.
+{ id: 'postgres', name: 'PostgreSQL', body: `## TL;DR
+The default relational database. If you're not sure what to pick, pick Postgres and say why.
 
-**Scale story:** vertical first (large instances go far) → read replicas → cache in front → partition big tables by time/tenant → shard by key (Citus, app-level) only when needed.
+## What it is
+A [relational database](#/sd/concept/databases): tables, rows, SQL, joins. Runs on one main server (the primary), optionally with copies ([replicas](#/sd/concept/replication)).
 
-**Watch-outs:** write throughput on a single primary, long transactions blocking vacuum, connection limits (use PgBouncer).` },
-{ id: 'redis', name: 'Redis (in-memory store)', body: `Key-value with data structures: strings, hashes, lists, sets, **sorted sets** (leaderboards, rate limiters, top-k), streams, **GEO**, pub/sub.
+## Why people reach for it
+- Real [transactions](#/sd/concept/databases) (ACID), so money and bookings stay correct.
+- \`SELECT … FOR UPDATE\` and unique constraints handle [contention](#/sd/concept/contention).
+- Great [indexes](#/sd/concept/indexing): B-tree for normal lookups, GIN for JSON and full-text, PostGIS for maps.
+- Stores JSON too (JSONB), so it covers a lot of "NoSQL" use cases.
 
-**Uses:** cache, session store, distributed locks (SET NX PX), rate limiting (INCR + EXPIRE or Lua scripts for atomicity), leaderboards, real-time pub/sub fan-out, seat holds with TTL.
+## How it scales (in this order)
+1. Bigger machine ([vertical scaling](#/sd/concept/scaling)). Goes a long way.
+2. [Read replicas](#/sd/concept/replication) for read-heavy load.
+3. A [cache](#/sd/concept/caching) in front.
+4. Partition huge tables (e.g. by month).
+5. [Shard](#/sd/concept/sharding) across machines only when writes or size demand it.
 
-**Watch-outs:** memory-bound; persistence (RDB/AOF) is not a primary database guarantee; single-threaded per shard so hot keys hurt; Redis Cluster shards by key hash slot.` },
-{ id: 'kafka', name: 'Kafka (event log)', body: `Distributed, partitioned, replicated append-only log. Producers write to **topics** split into **partitions**; order is guaranteed only within a partition; consumers in a **consumer group** split partitions among themselves.
+## Gotchas
+One primary means a write ceiling. Too many connections hurt it, so people put a pooler (PgBouncer) in front.` },
+{ id: 'redis', name: 'Redis', body: `## TL;DR
+A super-fast in-memory data store. The Swiss Army knife of system design.
 
-**Uses:** event streaming, decoupling services, buffering spikes (ad clicks, telemetry), CDC pipelines, replay for reprocessing.
+## What it is
+A key-value store that keeps everything in RAM, so reads and writes take well under a millisecond. Values can be strings, lists, sets, hashes, **sorted sets** (items with scores, kept in order) and geo points.
 
-**Say:** partition key (e.g. ad_id or user_id), retention, consumer lag, at-least-once + idempotent consumers, number of partitions caps consumer parallelism.` },
-{ id: 'dynamo', name: 'DynamoDB / Cassandra (wide-column, NoSQL)', body: `Partition key (+ sort key) access; scales writes horizontally almost without limit; predictable single-digit ms latency.
+## What you'll use it for
+- [Cache](#/sd/concept/caching) in front of the database.
+- Session store for [stateless](#/sd/concept/scaling) app servers.
+- [Rate limiter](#/sd/walk/rate-limiter-sd) counters (INCR + EXPIRE).
+- Leaderboards (sorted sets).
+- [Distributed locks](#/sd/concept/contention) and seat holds with a TTL (\`SET key value NX EX 600\` = set only if missing, auto-expire in 10 min).
+- [Pub/sub](#/sd/concept/realtime) to fan real-time messages out to connection servers.
+- "Drivers near me" with GEO commands ([search & geo](#/sd/concept/search)).
 
-**Design tables around queries.** Messages: PK = conversation_id, SK = timestamp → "last 50 messages" is one query. Global secondary indexes for other access patterns.
+## Gotchas
+RAM is limited and pricey. It can persist to disk, but don't treat it as your source of truth for important data. Very hot single keys can overload one node.` },
+{ id: 'kafka', name: 'Kafka', body: `## TL;DR
+A durable, replayable log of events that many services can read at their own pace.
 
-**DynamoDB extras:** conditional writes (optimistic locking), TTL, Streams (CDC), transactions across items (limited).
+## What it is
+A distributed [log/stream](#/sd/concept/queues). Producers append events to a **topic** (like "clicks"). Each topic is split into **partitions** so it can spread over many machines. Events stay for days, and each consumer group tracks its own position, so you can replay.
 
-**Watch-outs:** hot partitions, no ad-hoc joins, eventual consistency by default on reads (Dynamo offers strongly consistent reads at higher cost).` },
-{ id: 'elastic', name: 'Elasticsearch / OpenSearch', body: `Inverted-index search engine: full-text, fuzzy matching, facets/aggregations, geo queries.
+## Why use it
+- Absorb huge write spikes (ad clicks, telemetry).
+- Decouple services: the order service doesn't need to know who listens for "order placed".
+- Rebuild things by replaying history.
 
-**Pattern:** DB is the source of truth; CDC/stream keeps the index updated (eventually consistent). Don't make it your primary store.
+## Things to say
+- **Partition key**: events with the same key go to the same partition and stay in order (e.g. key by ad_id or chat_id).
+- More partitions = more consumers can work in parallel.
+- Delivery is at-least-once, so consumers must be [idempotent](#/sd/concept/idempotency).
+- Watch **consumer lag** (how far behind readers are).
 
-**Watch-outs:** reindexing cost, shard sizing, deep pagination (use search_after).` },
-{ id: 's3cdn', name: 'Blob storage (S3) & CDN', body: `**S3:** effectively infinite, cheap, 11 nines durability, presigned URLs, multipart upload, event notifications, lifecycle tiers.
+## Kafka vs a plain queue
+A queue (SQS) deletes a message once one worker handles it. Kafka keeps it so several groups can read it. Pick a queue for "do this job", Kafka for "this happened, anyone who cares can react".` },
+{ id: 'dynamo', name: 'DynamoDB / Cassandra', body: `## TL;DR
+NoSQL [databases](#/sd/concept/databases) that scale writes almost without limit, if you design tables around your queries up front.
 
-**CDN** (CloudFront, Fastly, Akamai): caches static assets and media at edge POPs near users. Also caches API GETs with proper Cache-Control. Signed URLs/cookies for private content. Netflix runs its own (Open Connect) for video.` },
-{ id: 'gateway', name: 'API gateway & load balancer', body: `**Gateway:** single entry; authn, rate limiting, request routing, TLS termination, request/response transformation, API keys/quotas.
+## How the data is shaped
+- **Partition key**: decides which machine holds the row (they use [consistent hashing](#/sd/concept/consistent-hashing)).
+- **Sort key**: orders rows within a partition.
+- Example: messages table, partition key = chat_id, sort key = timestamp. "Latest 50 messages in this chat" is one fast read.
 
-**Load balancer:** distributes across instances; L4 vs L7; health checks; sticky sessions only when needed (WebSockets).
+## When to pick it
+Massive write volume, simple key-based lookups, predictable access patterns (chat messages, events, IoT data).
 
-In diagrams: Client → (CDN) → Gateway/LB → services. Don't overthink it; name it and move on.` },
-{ id: 'flink', name: 'Stream processing (Flink, Spark Streaming)', body: `Stateful computations over unbounded streams: windowed aggregations (tumbling, sliding, session windows), joins, dedup, with **checkpoints** for fault tolerance and **watermarks** for late events.
+## Gotchas
+- No joins, limited ad-hoc queries. New query pattern = maybe a new index or table.
+- [Hot partitions](#/sd/concept/sharding) if one key gets most of the traffic.
+- Reads are [eventually consistent](#/sd/concept/consistency) by default (Dynamo lets you pay for strong reads).
+- DynamoDB has conditional writes (great for [contention](#/sd/concept/contention)) and TTLs.` },
+{ id: 'elastic', name: 'Elasticsearch', body: `## TL;DR
+A search engine you put next to your database for text search and filtering.
 
-**Uses:** real-time metrics (ad click counts per minute), fraud detection, feature computation. Pair with Kafka in, OLAP store out (ClickHouse, Druid, Pinot).
+## What it does
+Builds an [inverted index](#/sd/concept/search) (word → documents) so "find events matching 'taylor swift' in NYC next week" is fast, ranked by relevance, and forgiving of typos.
 
-**Lambda vs Kappa:** batch + stream reconciliation vs stream-only with replay.` },
-{ id: 'zookeeper', name: 'Coordination (ZooKeeper / etcd)', body: `Strongly consistent small-data stores (Raft/Zab) for leader election, configuration, service discovery, distributed locks with fencing tokens. Kubernetes stores cluster state in etcd. You rarely draw it, but mention it for leader election or when you need a lock that is actually correct.` }
+## How it fits
+The database stays the source of truth. Changes stream into Elasticsearch via CDC (change data capture), so search is a few seconds behind. That's fine for search, so say so.
+
+## Gotchas
+Not a primary database. Reindexing big datasets is slow. Deep pagination is expensive.` },
+{ id: 's3cdn', name: 'S3 & CDNs', body: `## TL;DR
+S3 holds your files; a CDN delivers them fast from near the user.
+
+## S3 (object storage)
+Store any file under a key. Practically unlimited, cheap, extremely durable. Supports **presigned URLs** (temporary permission to upload/download one file directly) and **multipart uploads** (big files in resumable chunks). Details: [Large files](#/sd/concept/blobs).
+
+## CDN
+A worldwide network of [cache](#/sd/concept/caching) servers. The first request in a city fetches from your origin; the rest are served locally. Use it for images, video, JS/CSS, even cacheable API responses. Signed URLs keep private content private.` },
+{ id: 'gateway', name: 'API gateway & load balancer', body: `## TL;DR
+The front door. Usually one box in your diagram.
+
+## Load balancer
+Spreads requests across identical servers and skips unhealthy ones. More: [Load balancing](#/sd/concept/load-balancing).
+
+## API gateway
+A smarter front door: checks [auth](#/sd/concept/auth) tokens, applies [rate limits](#/sd/walk/rate-limiter-sd), routes \`/bookings\` to the booking service and \`/search\` to search.
+
+## In the interview
+Draw "Client → API Gateway → services" and move on, unless the question is about the gateway itself.` },
+{ id: 'flink', name: 'Stream processing (Flink)', body: `## TL;DR
+Runs continuous calculations on a stream of events as they arrive, e.g. "clicks per ad per minute".
+
+## Key ideas
+- Reads from [Kafka](#/sd/tech/kafka), keeps running state (counts so far), writes results out.
+- **Windows** group events by time: tumbling (every minute, no overlap), sliding (last 5 minutes, updated every minute), session (until the user goes quiet).
+- **Checkpoints** save state regularly so a crash resumes without losing counts.
+- **Watermarks** decide how long to wait for late events before closing a window.
+
+## Where it shows up
+[Ad click aggregator](#/sd/walk/ad-click-aggregator), fraud detection, real-time dashboards, trending topics.` },
+{ id: 'zookeeper', name: 'Coordination (ZooKeeper / etcd)', body: `## TL;DR
+Small, strongly consistent stores for "who's in charge?" questions.
+
+## Uses
+Leader election (which of 3 servers is primary), shared config, service discovery (which servers are alive), and locks that are actually safe. Kafka and Kubernetes rely on these internally.
+
+## In the interview
+Rarely drawn. Mention it if you need leader election or a truly safe [distributed lock](#/sd/concept/contention).` }
 ];
 
 var SD_PATTERNS = [
-{ id: 'p-realtime', name: 'Pattern: Real-time updates', body: `**Problem:** clients need to see changes from others within ~a second (chat, live comments, collaborative docs, auction bids, ride location).
+{ id: 'p-realtime', name: 'Pattern: real-time updates', body: `## TL;DR
+Users need to see what others did within a second: chat, live comments, bids, a driver moving on a map.
 
-**Recipe:** client holds WebSocket/SSE to a connection server → connection servers subscribe to pub/sub channels (per room/user/topic) → writers publish events after persisting.
+## The recipe
+1. Client keeps an open connection: [SSE or WebSocket](#/sd/concept/realtime).
+2. That connection lives on one of many connection servers.
+3. When something happens, the writer saves it to the database, then **publishes** it to a channel (per chat, per stream, per user) via [Redis pub/sub or Kafka](#/sd/concept/realtime).
+4. Connection servers **subscribed** to that channel push it to their connected clients.
 
-**Deep dives:** fan-out for huge rooms (sample or batch updates, e.g. 10 live comments/sec max per viewer), reconnect + catch-up (client sends last seen id/timestamp, server replays from DB), presence (heartbeats with TTL in Redis), ordering per room.` },
-{ id: 'p-longtasks', name: 'Pattern: Long-running tasks', body: `**Problem:** work takes seconds to hours (video transcoding, report generation, LLM agent runs, sending 1M emails).
+## Deep dives interviewers like
+- Huge rooms (1M viewers): batch or sample updates instead of pushing every event.
+- Reconnects: client says "last id I saw", server sends what it missed.
+- Presence: heartbeats + a Redis key with a short TTL.
 
-**Recipe:** API validates and enqueues → returns 202 + job id → workers process from a queue → status stored in DB → client polls or gets pushed (SSE/WebSocket/webhook/email).
+## See it used
+[Chat](#/sd/walk/chat), [Live comments](#/sd/walk/live-comments), [Uber](#/sd/walk/uber).` },
+{ id: 'p-longtasks', name: 'Pattern: long-running tasks', body: `## TL;DR
+If work takes more than a couple of seconds, don't make the user wait on the request. Queue it and report back.
 
-**Deep dives:** idempotent job steps, retries with DLQ, progress reporting, cancellation, priorities (separate queues), autoscaling workers on queue depth. Multi-step workflows → orchestration (Temporal, Step Functions) with durable state.` },
-{ id: 'p-contention', name: 'Pattern: Dealing with contention', body: `**Problem:** many users act on the same scarce resource (last seats, limited drops, inventory, bids).
+## The recipe
+1. API validates the request, saves a job row (status: pending), puts the job on a [queue](#/sd/concept/queues), returns "202 Accepted" with a job id.
+2. Workers pull jobs, do the work, update the status.
+3. Client finds out by polling the job id, or gets pushed an update ([SSE/WebSocket](#/sd/concept/realtime)), or an email.
 
-**Recipe ladder:** DB transaction + row lock → optimistic concurrency with version column → reservation with TTL (Redis lock or status=held + expires_at) → virtual waiting room / queue for extreme spikes (Taylor Swift on-sale).
+## Deep dives
+Retries + dead-letter queue, [idempotent](#/sd/concept/idempotency) steps, progress %, cancel buttons, separate queues for urgent vs bulk work, autoscaling workers on queue length.
 
-**Say:** what is the unit of contention (seat, item), what happens to the loser (clear error, alternative seats), and how holds are released (TTL + cleanup job).` },
-{ id: 'p-reads', name: 'Pattern: Scaling reads', body: `**Order of moves:** indexes & query tuning → denormalize / precompute → cache (Redis, CDN) → read replicas → shard.
+## See it used
+[Video transcoding](#/sd/walk/video-streaming), [Notifications](#/sd/walk/notifications), report exports, AI agent runs.` },
+{ id: 'p-contention', name: 'Pattern: contention', body: `## TL;DR
+Lots of people want the same scarce thing (last seat, limited sneaker drop). Make sure exactly one wins.
 
-**Precompute** is the big one: feeds (fan-out on write), counts (counters updated async), search indexes, materialized views.
+## The ladder (start at the top, go down only if needed)
+1. Transaction + row lock, or a conditional update ([Contention](#/sd/concept/contention)).
+2. Optimistic concurrency with a version number when conflicts are rare.
+3. Temporary holds with an expiry for multi-minute checkouts.
+4. A virtual waiting room/queue for extreme spikes, letting people in in batches.
 
-**Hot-key** handling for viral items: in-process caches with short TTLs, key replication, request coalescing.` },
-{ id: 'p-writes', name: 'Pattern: Scaling writes', body: `**Moves:** batch writes, buffer through a queue/stream, shard by a key that spreads load, use an LSM-based store, pre-aggregate before writing (count clicks per minute in memory/Flink instead of a row per click), reduce what you store (sampling, TTLs).
+## Always say
+What's being contended (a seat), what the loser sees, how holds expire.
 
-**Hot partition fixes:** add a random suffix to the key (write sharding) and aggregate on read.` },
-{ id: 'p-blobs', name: 'Pattern: Handling large blobs', body: `Presigned URL upload direct to S3 → multipart & resumable for large files → S3 event triggers processing → metadata row tracks status → CDN for downloads. Never proxy bytes through API servers.` },
-{ id: 'p-multistep', name: 'Pattern: Multi-step processes', body: `**Problem:** a business flow spans services and minutes/days (order → payment → fulfillment; onboarding with KYC; agent tool calls).
+## See it used
+[Ticketmaster](#/sd/walk/ticketmaster), [Uber matching](#/sd/walk/uber), [Payments](#/sd/walk/payments-ledger).` },
+{ id: 'p-reads', name: 'Pattern: scaling reads', body: `## TL;DR
+Most apps read way more than they write. Make reads cheap.
 
-**Options:** choreography (services react to events; simple, hard to see the whole flow) vs orchestration (a workflow engine like Temporal tracks state, retries, timeouts; easier to reason about).
+## Moves, cheapest first
+1. Right [indexes](#/sd/concept/indexing) and sane queries.
+2. Precompute: store the answer instead of computing it per request (feeds, counters, search indexes).
+3. [Cache](#/sd/concept/caching) in Redis and a CDN.
+4. [Read replicas](#/sd/concept/replication).
+5. [Shard](#/sd/concept/sharding).
 
-**Saga pattern:** each step has a compensating action (refund, release seat) instead of a distributed transaction.` }
+## Viral content
+One item gets hammered (a hot key): copy it into each app server's memory for a few seconds, or spread it across several cache keys.
+
+## See it used
+[News feed](#/sd/walk/news-feed), [URL shortener](#/sd/walk/url-shortener), [Typeahead](#/sd/walk/typeahead).` },
+{ id: 'p-writes', name: 'Pattern: scaling writes', body: `## TL;DR
+When writes overwhelm one database, spread them out or do fewer of them.
+
+## Moves
+- Batch writes together.
+- Buffer through a [queue or Kafka](#/sd/concept/queues) to smooth spikes.
+- Pre-aggregate: count clicks per minute in memory ([Flink](#/sd/tech/flink)) and write one row, not one row per click.
+- [Shard](#/sd/concept/sharding) by a key that spreads load evenly.
+- Use a write-optimized store ([Cassandra/Dynamo](#/sd/tech/dynamo)).
+- Hot key? Add a random suffix to spread it, combine on read.
+
+## See it used
+[Ad click aggregator](#/sd/walk/ad-click-aggregator), [Uber location updates](#/sd/walk/uber).` },
+{ id: 'p-blobs', name: 'Pattern: big files', body: `## TL;DR
+Bytes go straight between the client and S3. Your servers only handle the metadata.
+
+## The recipe
+Presigned URL → direct (multipart, resumable) upload to S3 → S3 event kicks off processing → CDN for downloads. Full explanation: [Large files](#/sd/concept/blobs).
+
+## See it used
+[Dropbox](#/sd/walk/dropbox), [YouTube/Netflix](#/sd/walk/video-streaming), chat attachments.` },
+{ id: 'p-multistep', name: 'Pattern: multi-step workflows', body: `## TL;DR
+A business process spans several services and can take minutes or days (order → pay → ship). Steps can fail halfway.
+
+## Two styles
+- **Choreography**: each service listens for events and does its part. Simple to start, hard to see the whole flow.
+- **Orchestration**: a workflow engine (Temporal, AWS Step Functions) runs the steps, tracks state, retries and times out. Easier to reason about.
+
+## Sagas
+You can't do one database transaction across services. Instead each step has an "undo" (refund the payment, release the seat). If step 3 fails, run the undos for steps 2 and 1.
+
+## See it used
+[Payments](#/sd/walk/payments-ledger), [Ticketmaster checkout](#/sd/walk/ticketmaster), AI agents that call several tools.` }
 ];
 
 
@@ -3296,6 +3920,319 @@ Solved problems, starred items, your code, and read status are saved on this pho
 ];
 
 
+// [term, [aliases matched in text], short casual definition, link (optional)]
+var GLOSSARY = [
+// ---- web & networking basics
+['Client', ['client', 'clients'], 'Whatever starts a request: a browser, a phone app, or another server.', '#/sd/concept/request-path'],
+['Server', ['app server', 'app servers', 'application server'], 'A computer (usually a rented cloud machine) running your code, waiting for requests and answering them.', '#/sd/concept/request-path'],
+['API', ['API', 'APIs'], 'The menu of requests a server agrees to answer, and what each one returns.', '#/sd/concept/request-path'],
+['Endpoint', ['endpoint', 'endpoints'], 'One item on the API menu, like POST /bookings.', '#/sd/concept/request-path'],
+['HTTP', ['HTTP', 'HTTPS'], 'The request/response protocol of the web. HTTPS is HTTP encrypted with TLS.', '#/sd/concept/request-path'],
+['REST', ['REST', 'RESTful'], 'A style of API where URLs are nouns (/events/42) and HTTP methods are verbs (GET, POST, PUT, DELETE).', '#/sd/guide/framework'],
+['GraphQL', ['GraphQL'], 'An API style where the client sends one query describing exactly which fields it wants. Handy when many clients need different shapes of data.', null],
+['gRPC', ['gRPC'], 'A fast binary API protocol for service-to-service calls, with strongly typed contracts.', null],
+['DNS', ['DNS'], 'The internet\'s phone book: turns a name like api.example.com into an IP address.', '#/sd/concept/request-path'],
+['TCP', ['TCP'], 'The network protocol that makes sure bytes arrive complete and in order.', '#/sd/concept/request-path'],
+['Latency', ['latency', 'latencies'], 'How long one request takes from start to finish.', '#/sd/concept/request-path'],
+['Throughput', ['throughput', 'QPS', 'RPS'], 'How much work the system handles per second, e.g. requests per second (RPS/QPS).', '#/sd/concept/request-path'],
+['p99', ['p99', 'p50', 'p95', 'percentile', 'percentiles'], '"p99 = 200 ms" means 99% of requests finish within 200 ms. The slowest 1% is where users get annoyed.', '#/sd/concept/request-path'],
+['Bandwidth', ['bandwidth'], 'How much data per second a connection can carry. Different from latency (how long one trip takes).', null],
+['Microservice', ['microservice', 'microservices'], 'A separately deployed piece of the backend that owns one job (bookings, search, payments).', '#/sd/concept/request-path'],
+
+// ---- scaling
+['Scaling', ['scaling', 'scalable'], 'Changing a system so it keeps working well with more users, traffic or data.', '#/sd/concept/scaling'],
+['Bottleneck', ['bottleneck', 'bottlenecks'], 'The first thing to run out (CPU, memory, disk, network). Fix it and the next one shows up.', '#/sd/concept/scaling'],
+['Vertical scaling', ['vertical scaling', 'scale up', 'vertically'], 'Making one machine bigger. Simple, but there\'s a ceiling and it\'s still one machine.', '#/sd/concept/scaling'],
+['Horizontal scaling', ['horizontal scaling', 'scale out', 'horizontally'], 'Adding more machines and spreading the work across them.', '#/sd/concept/scaling'],
+['Stateless', ['stateless'], 'A server that remembers nothing between requests, so any copy can handle any request. Shared data lives in a DB or cache instead.', '#/sd/concept/scaling'],
+['Stateful', ['stateful'], 'Info a server keeps between requests (a logged-in session, an open WebSocket). Makes servers non-interchangeable.', '#/sd/concept/scaling'],
+['Autoscaling', ['autoscaling', 'autoscale'], 'Automatically adding or removing servers based on load (CPU, request rate, queue length).', '#/sd/concept/scaling'],
+['Single point of failure', ['single point of failure', 'SPOF', 'SPOFs'], 'One component whose failure takes the whole system down.', '#/sd/concept/observability'],
+['Load balancer', ['load balancer', 'load balancers', 'LB', 'load balancing'], 'A front door that spreads incoming requests across identical servers and skips broken ones.', '#/sd/concept/load-balancing'],
+['API gateway', ['API gateway', 'gateway'], 'A smart front door: auth checks, rate limits and routing to the right service.', '#/sd/tech/gateway'],
+['Health check', ['health check', 'health checks'], 'A ping the load balancer sends each server to see if it\'s alive.', '#/sd/concept/load-balancing'],
+['Sticky sessions', ['sticky sessions', 'sticky'], 'Pinning a user to one server. Needed for stateful servers; avoid if you can.', '#/sd/concept/load-balancing'],
+['Consistent hashing', ['consistent hashing', 'hash ring'], 'Assigning keys to servers on a "ring" so adding or removing a server only moves a few keys.', '#/sd/concept/consistent-hashing'],
+['Hash function', ['hash function', 'hashing'], 'Turns any input into a fixed-size, evenly spread number. Same input, same output.', '#/sd/concept/consistent-hashing'],
+
+// ---- data
+['Database', ['database', 'databases', 'DB', 'DBs'], 'Durable storage you can query. Survives crashes and restarts.', '#/sd/concept/databases'],
+['SQL', ['SQL', 'relational', 'relational database'], 'Relational databases: tables with fixed columns, joins between them, and transactions. Postgres, MySQL.', '#/sd/concept/databases'],
+['NoSQL', ['NoSQL'], 'Non-relational stores (key-value, wide-column, document) that trade joins and flexibility for easy horizontal scale.', '#/sd/concept/databases'],
+['Schema', ['schema', 'schemas'], 'The declared structure of your data: which tables and columns, and their types.', '#/sd/concept/databases'],
+['Primary key', ['primary key', 'primary keys'], 'The unique id of a row.', '#/sd/concept/databases'],
+['Foreign key', ['foreign key', 'foreign keys'], 'A column pointing at another table\'s row, like booking.user_id.', '#/sd/concept/databases'],
+['Join', ['join', 'joins'], 'Combining related rows from two tables in one query.', '#/sd/concept/databases'],
+['Transaction', ['transaction', 'transactions'], 'A group of reads/writes that happens all-or-nothing.', '#/sd/concept/databases'],
+['ACID', ['ACID'], 'Transaction guarantees: Atomic (all or nothing), Consistent (rules hold), Isolated (no peeking at half-done work), Durable (survives crashes).', '#/sd/concept/databases'],
+['Index', ['index', 'indexes', 'indices', 'B-tree'], 'An extra sorted structure that lets the DB find rows without scanning the whole table. Speeds reads, slows writes a bit.', '#/sd/concept/indexing'],
+['Full table scan', ['full table scan'], 'Reading every row to answer a query. Fine for small tables, painful for big ones.', '#/sd/concept/indexing'],
+['LSM tree', ['LSM tree', 'LSM'], 'A storage design that appends writes and merges files in the background. Very fast writes (Cassandra, DynamoDB).', '#/sd/concept/indexing'],
+['Partition key', ['partition key', 'shard key'], 'The field that decides which machine a row lives on.', '#/sd/concept/sharding'],
+['Sort key', ['sort key'], 'Orders rows within one partition, e.g. timestamp for messages in a chat.', '#/sd/tech/dynamo'],
+['Postgres', ['Postgres', 'PostgreSQL'], 'The default relational database. ACID, great indexes, scales further than people think.', '#/sd/tech/postgres'],
+['Redis', ['Redis'], 'Super-fast in-memory store: cache, sessions, locks, rate limits, leaderboards, pub/sub.', '#/sd/tech/redis'],
+['Kafka', ['Kafka'], 'A durable, replayable event log many services can read at their own pace.', '#/sd/tech/kafka'],
+['DynamoDB', ['DynamoDB', 'Cassandra', 'Dynamo'], 'NoSQL databases that scale writes massively if you design tables around your queries.', '#/sd/tech/dynamo'],
+['Elasticsearch', ['Elasticsearch', 'OpenSearch'], 'A search engine for text search and filtering, kept in sync with your DB.', '#/sd/tech/elastic'],
+['S3', ['S3', 'object storage', 'blob storage'], 'Cheap, nearly unlimited file storage. Files are stored under keys.', '#/sd/concept/blobs'],
+['Source of truth', ['source of truth'], 'The one authoritative copy of the data. Caches and search indexes are just derived copies.', '#/sd/concept/search'],
+
+// ---- caching
+['Cache', ['cache', 'caches', 'caching', 'cached'], 'A fast copy of data kept closer to where it\'s needed, so you skip the slow source.', '#/sd/concept/caching'],
+['Cache hit', ['cache hit', 'hit rate', 'cache miss'], 'Hit: the data was in the cache. Miss: it wasn\'t, so you went to the slow source.', '#/sd/concept/caching'],
+['TTL', ['TTL', 'TTLs', 'time to live'], 'How long something lives before it expires (cache entries, locks, sessions).', '#/sd/concept/caching'],
+['Eviction', ['eviction', 'evict', 'evicts', 'LRU', 'LFU'], 'Kicking entries out of a full cache. LRU drops the least recently used.', '#/sd/concept/caching'],
+['Cache invalidation', ['invalidation', 'invalidate', 'invalidated'], 'Removing or refreshing cached copies when the real data changes.', '#/sd/concept/caching'],
+['Cache-aside', ['cache-aside'], 'Check cache → on miss read DB and fill the cache → on write update DB and delete the cache key.', '#/sd/concept/caching'],
+['Cache stampede', ['cache stampede', 'thundering herd', 'stampede'], 'A popular key expires and thousands of requests hit the DB at once.', '#/sd/concept/caching'],
+['Hot key', ['hot key', 'hot keys', 'hot partition', 'hot partitions', 'hot shard', 'hot shards'], 'One key or partition getting way more traffic than the rest.', '#/sd/concept/sharding'],
+['CDN', ['CDN', 'CDNs'], 'Servers around the world caching files near users so downloads are fast.', '#/sd/concept/blobs'],
+
+// ---- replication, sharding, consistency
+['Replication', ['replication', 'replica', 'replicas', 'read replica', 'read replicas', 'replicated'], 'Keeping copies of data on several machines for safety and more read capacity.', '#/sd/concept/replication'],
+['Leader', ['leader', 'follower', 'followers'], 'In leader-follower replication, the leader takes all writes and followers copy it.', '#/sd/concept/replication'],
+['Failover', ['failover'], 'Switching to a backup when the main machine dies.', '#/sd/concept/replication'],
+['Replication lag', ['replication lag'], 'How far behind a replica is. Causes "I saved it but don\'t see it" bugs.', '#/sd/concept/replication'],
+['Quorum', ['quorum'], 'Requiring a majority (or enough) of replicas to agree on a read or write.', '#/sd/concept/replication'],
+['Sharding', ['sharding', 'shard', 'shards', 'sharded', 'partitioning', 'partitioned'], 'Splitting data across machines so each holds only part of it.', '#/sd/concept/sharding'],
+['Consistency', ['consistency'], 'Whether every reader sees the latest write.', '#/sd/concept/consistency'],
+['Strong consistency', ['strong consistency', 'strongly consistent', 'linearizable'], 'Every read sees the most recent write, as if there were only one copy.', '#/sd/concept/consistency'],
+['Eventual consistency', ['eventual consistency', 'eventually consistent'], 'Copies may briefly disagree but catch up within seconds.', '#/sd/concept/consistency'],
+['Read-your-writes', ['read-your-writes'], 'You always see your own changes right away, even if others see them a bit later.', '#/sd/concept/consistency'],
+['CAP theorem', ['CAP'], 'When the network splits, choose: stay correct (refuse some requests) or stay available (maybe stale).', '#/sd/concept/consistency'],
+['Network partition', ['network partition', 'partition tolerance'], 'Machines are up but can\'t talk to each other.', '#/sd/concept/consistency'],
+
+// ---- async & reliability
+['Queue', ['queue', 'queues', 'message queue', 'SQS', 'RabbitMQ'], 'A buffer of work: producers drop jobs in, workers take them out at their own pace.', '#/sd/concept/queues'],
+['Stream', ['event log'], 'An ordered, kept-around log of events (Kafka). Many readers, replayable.', '#/sd/concept/queues'],
+['Asynchronous', ['asynchronous'], 'Hand off the work and don\'t wait for it. The user gets a fast response.', '#/sd/concept/queues'],
+['Producer / consumer', ['producer', 'producers', 'consumer', 'consumers', 'worker', 'workers'], 'Producers put messages in; consumers (workers) take them out and process them.', '#/sd/concept/queues'],
+['At-least-once', ['at-least-once'], 'Every message gets delivered, maybe more than once. So processing must be idempotent.', '#/sd/concept/queues'],
+['Dead-letter queue', ['dead-letter queue', 'DLQ'], 'Where messages go after failing too many times, so they don\'t block the rest.', '#/sd/concept/queues'],
+['Backpressure', ['backpressure'], 'Slowing producers down when consumers can\'t keep up.', '#/sd/concept/queues'],
+['Consumer lag', ['consumer lag'], 'How far behind consumers are. The key queue health metric.', '#/sd/concept/queues'],
+['Outbox pattern', ['outbox', 'outbox pattern'], 'Save the data and the event to publish in one DB transaction; a relay publishes the event later. No lost events.', '#/sd/concept/queues'],
+['CDC', ['CDC', 'change data capture'], 'Reading the database\'s change log and forwarding every change (e.g. into a search index).', '#/sd/concept/search'],
+['Fan-out', ['fan-out', 'fan out'], 'One event delivered to many recipients (a post to every follower\'s feed).', '#/sd/walk/news-feed'],
+['Pub/sub', ['pub/sub'], 'Publishers send to a channel; everyone subscribed to it gets a copy.', '#/sd/concept/realtime'],
+['Idempotent', ['idempotent', 'idempotency', 'idempotency key', 'idempotency keys'], 'Doing it twice has the same effect as once, so retries are safe.', '#/sd/concept/idempotency'],
+['Exponential backoff', ['exponential backoff', 'backoff', 'jitter'], 'Retry after 100 ms, then 200, 400… plus a bit of randomness (jitter) so clients don\'t retry in sync.', '#/sd/concept/idempotency'],
+['Circuit breaker', ['circuit breaker', 'circuit breakers'], 'Stop calling a failing dependency for a while so it can recover and you fail fast.', '#/sd/concept/idempotency'],
+['Race condition', ['race condition', 'race conditions', 'races'], 'A bug where the outcome depends on which request gets there first.', '#/sd/concept/contention'],
+['Lock', ['row lock', 'distributed lock', 'distributed locks'], 'Exclusive permission to change something; everyone else waits.', '#/sd/concept/contention'],
+['Optimistic concurrency', ['optimistic concurrency', 'OCC', 'version column', 'optimistic locking'], 'No lock; update only if the version hasn\'t changed since you read it, otherwise retry.', '#/sd/concept/contention'],
+['Contention', ['contention'], 'Many requests fighting over the same thing at the same time.', '#/sd/concept/contention'],
+['Availability', ['availability', 'highly available', 'high availability'], 'The share of time the system works. 99.9% ≈ 9 hours down a year.', '#/sd/concept/observability'],
+['Durability', ['durability'], 'Once saved, data isn\'t lost, even if machines crash.', '#/sd/concept/databases'],
+['Redundancy', ['redundancy', 'redundant'], 'Extra copies so one failure doesn\'t take you down.', '#/sd/concept/observability'],
+['Availability zone', ['availability zone', 'AZ', 'AZs', 'multi-AZ'], 'A separate data center in the same region. Spread across them to survive one going down.', '#/sd/concept/observability'],
+['SLO', ['SLO', 'SLA', 'SLI'], 'SLI = a measurement, SLO = your target for it, SLA = a promise to customers with penalties.', '#/sd/concept/observability'],
+['Rate limiting', ['rate limiting', 'rate limit', 'rate limits', 'rate limiter', 'throttle'], 'Capping how many requests someone can make in a time window.', '#/sd/walk/rate-limiter-sd'],
+['Token bucket', ['token bucket'], 'Rate limit algorithm: a bucket refills at a steady rate; each request spends a token. Allows short bursts.', '#/sd/walk/rate-limiter-sd'],
+['Observability', ['observability', 'metrics', 'tracing', 'traces'], 'Metrics, logs and traces that tell you what the system is doing.', '#/sd/concept/observability'],
+['Canary', ['canary', 'feature flag', 'feature flags'], 'Ship to a small slice of traffic first (canary) or toggle code on/off (feature flag) to reduce deploy risk.', '#/sd/concept/observability'],
+['Saga', ['saga', 'sagas', 'compensating'], 'A multi-step process where each step has an undo, used instead of one big cross-service transaction.', '#/sd/pattern/p-multistep'],
+
+// ---- real-time
+['Polling', ['polling', 'long polling', 'short polling', 'poll', 'polls'], 'The client keeps asking "anything new?" Long polling holds the request open until there is.', '#/sd/concept/realtime'],
+['SSE', ['SSE', 'Server-Sent Events'], 'One open HTTP connection the server pushes events down. One direction only. Great for feeds and streaming.', '#/sd/concept/realtime'],
+['WebSocket', ['WebSocket', 'WebSockets', 'socket', 'sockets'], 'A persistent two-way connection between client and server. Chat, games, live collab.', '#/sd/concept/realtime'],
+['Presence', ['presence', 'heartbeat', 'heartbeats'], '"Online now" status, usually from periodic heartbeats that expire if they stop.', '#/sd/concept/realtime'],
+
+// ---- files, search, geo
+['Blob', ['blob', 'blobs'], 'Any file treated as a chunk of bytes (image, video, PDF).', '#/sd/concept/blobs'],
+['Presigned URL', ['presigned URL', 'presigned URLs', 'presigned', 'signed URL', 'signed URLs'], 'A temporary link that lets one client upload/download one file directly to S3.', '#/sd/concept/blobs'],
+['Multipart upload', ['multipart upload', 'multipart', 'chunked', 'resumable'], 'Upload a big file in parts that can go in parallel and resume after a dropped connection.', '#/sd/concept/blobs'],
+['Metadata', ['metadata'], 'Facts about a file or item (owner, size, status) stored in the database.', '#/sd/concept/blobs'],
+['Inverted index', ['inverted index', 'full-text search', 'full-text'], 'Word → list of documents containing it. How search engines work.', '#/sd/concept/search'],
+['Geohash', ['geohash', 'quadtree', 'geospatial'], 'Ways to index locations so "near me" queries are fast.', '#/sd/concept/search'],
+
+// ---- auth
+['Authentication', ['authentication', 'authn'], 'Proving who you are.', '#/sd/concept/auth'],
+['Authorization', ['authorization', 'authz', 'permissions'], 'Deciding what you\'re allowed to do.', '#/sd/concept/auth'],
+['Session', ['sessions', 'session id'], 'Server-side record that you\'re logged in, found via an id in a cookie.', '#/sd/concept/auth'],
+['JWT', ['JWT', 'JWTs', 'access token', 'access tokens'], 'A signed token holding user info that services can verify without a DB lookup. Hard to revoke, so keep it short-lived.', '#/sd/concept/auth'],
+['Refresh token', ['refresh token', 'refresh tokens', 'rotation'], 'Long-lived token used to get new short-lived access tokens. Stored server-side so it can be revoked.', '#/sd/concept/auth'],
+['Cookie', ['cookie', 'cookies', 'httpOnly', 'SameSite'], 'A small value the browser stores and sends back automatically. httpOnly = JS can\'t read it.', '#/sd/concept/auth'],
+['XSS', ['XSS', 'cross-site scripting'], 'Attacker gets their JavaScript running on your page. Sanitize content, avoid tokens in localStorage.', '#/sd/concept/auth'],
+['CSRF', ['CSRF'], 'Another site tricks your browser into sending a request to your app with your cookies. SameSite cookies and CSRF tokens prevent it.', '#/sd/concept/auth'],
+['OAuth', ['OAuth', 'OAuth 2.0', 'OIDC', 'PKCE', 'scopes'], 'Standard for letting an app act on your behalf without your password (scoped tokens). OIDC adds "who you are".', '#/sd/concept/auth'],
+['Passkey', ['passkey', 'passkeys', 'WebAuthn'], 'Device-held key pair instead of a password. Phishing-resistant.', '#/sd/concept/auth'],
+['MFA', ['MFA', '2FA'], 'Multi-factor auth: password plus something you have (phone, passkey).', '#/sd/concept/auth'],
+['RBAC', ['RBAC', 'ABAC', 'ReBAC'], 'Ways to model permissions: by role, by attributes, or by relationships.', '#/sd/concept/auth'],
+
+// ---- DSA
+['Big-O', ['Big-O', 'O(n)', 'O(1)', 'O(log n)', 'O(n log n)', 'O(n²)', 'complexity', 'time complexity', 'space complexity'], 'How work grows as input grows. O(n) = double the input, double the work.', '#/learn/bigo'],
+['Amortized', ['amortized'], 'Average cost per operation over many operations, even if one is occasionally slow.', '#/learn/bigo'],
+['Array', ['array', 'arrays'], 'Items in a row, accessed by position in O(1).', '#/learn/ds'],
+['Hash map', ['hash map', 'hash maps', 'Map', 'hash table', 'dictionary'], 'Key → value lookup in O(1) on average. JS: Map.', '#/learn/ds'],
+['Set', ['Set', 'hash set'], 'A collection of unique values with O(1) "is it in there?" checks.', '#/learn/ds'],
+['Stack', ['stack', 'stacks', 'LIFO'], 'Last in, first out. Push on top, pop from top.', '#/learn/ds'],
+['Queue (DSA)', ['FIFO', 'deque'], 'First in, first out. Join at the back, leave from the front.', '#/learn/ds'],
+['Linked list', ['linked list', 'linked lists', 'ListNode'], 'Nodes each pointing to the next one. Cheap inserts, slow lookups by position.', '#/learn/ds'],
+['Tree', ['tree', 'trees', 'binary tree', 'TreeNode', 'subtree', 'subtrees'], 'Nodes with children, starting from one root. Binary tree = at most 2 children each.', '#/learn/ds'],
+['BST', ['BST', 'binary search tree'], 'Binary tree where left < node < right everywhere. In-order traversal comes out sorted.', '#/learn/ds'],
+['Heap', ['heap', 'heaps', 'min-heap', 'max-heap', 'priority queue', 'MinHeap'], 'Always gives you the smallest (or largest) item fast: O(log n) push/pop, O(1) peek.', '#/pattern/heap'],
+['Graph', ['graph', 'graphs', 'vertex', 'vertices', 'adjacency list'], 'Nodes connected by edges. Maps, networks, dependencies.', '#/pattern/graphs'],
+['Trie', ['trie', 'tries', 'prefix tree'], 'A tree of characters for fast prefix lookups (autocomplete).', '#/pattern/trie'],
+['Recursion', ['recursion', 'recursive', 'recurse', 'base case', 'call stack'], 'A function calling itself on a smaller input until it hits a base case.', '#/learn/recursion'],
+['DFS', ['DFS', 'depth-first'], 'Depth-first search: go as deep as possible, then back up. Recursion or a stack.', '#/pattern/tree-dfs'],
+['BFS', ['BFS', 'breadth-first'], 'Breadth-first search: visit everything 1 step away, then 2 steps… Uses a queue. Finds shortest paths in unweighted graphs.', '#/pattern/tree-bfs'],
+['Pre/in/post-order', ['pre-order', 'in-order', 'post-order', 'preorder', 'inorder', 'postorder'], 'When you handle a tree node: before its children (pre), between them (in), or after them (post).', '#/pattern/tree-dfs'],
+['Topological sort', ['topological sort', 'topo sort', "Kahn's", 'in-degree', 'in-degrees'], 'Ordering tasks so every task comes after its prerequisites.', '#/pattern/graphs'],
+['Dijkstra', ['Dijkstra', "Dijkstra's"], 'Shortest paths when edges have (non-negative) weights. Uses a min-heap.', '#/pattern/graphs'],
+['Union-Find', ['Union-Find', 'disjoint set', 'path compression', 'union by rank'], 'Tracks which items are connected, merging groups in near O(1).', '#/pattern/union-find'],
+['Monotonic stack', ['monotonic stack', 'monotonic'], 'A stack kept in sorted order; great for "next greater element" questions.', '#/pattern/stack'],
+['Two pointers', ['two pointers', 'two-pointer'], 'Two indexes moving through the data to skip work, often from both ends.', '#/pattern/two-pointers'],
+['Sliding window', ['sliding window'], 'A range [left, right] that grows and shrinks over an array or string.', '#/pattern/sliding-window'],
+['Binary search', ['binary search'], 'Halve the search space each step: O(log n).', '#/pattern/binary-search'],
+['Prefix sum', ['prefix sum', 'prefix sums'], 'Running totals so any range sum is one subtraction.', '#/pattern/prefix'],
+['Backtracking', ['backtracking', 'backtrack'], 'Try a choice, explore, undo it, try the next. For "list all combinations" problems.', '#/pattern/backtracking'],
+['Dynamic programming', ['dynamic programming', 'memoization', 'memoize', 'subproblem', 'subproblems'], 'Solve each smaller subproblem once and reuse the answers instead of recomputing.', '#/pattern/dp-1d'],
+['Greedy', ['greedy'], 'Take the best-looking choice each step and never look back. Only works when you can prove it.', '#/pattern/greedy'],
+['Brute force', ['brute force', 'brute-force'], 'Try every possibility. Usually too slow, but always say it first.', '#/more/howto'],
+['Invariant', ['invariant'], 'Something you keep true at every step of a loop; it\'s how you prove the code is right.', null],
+
+// ---- frontend
+['Virtualization', ['virtualization', 'virtualize', 'virtualized'], 'Only render the list rows on screen (plus a buffer) instead of all 10,000.', '#/sd/fe/fe-feed'],
+['Debounce', ['debounce', 'debounced', 'throttle'], 'Debounce: wait until calls stop before running. Throttle: run at most once per interval.', '#/pattern/practical'],
+['Optimistic update', ['optimistic update', 'optimistic updates', 'optimistically'], 'Show the change in the UI immediately, roll back if the server says no.', '#/sd/fe/fe-feed'],
+['Cursor pagination', ['cursor pagination', 'pagination', 'paginated'], 'Page using "items after this id" instead of "skip 40", so new items don\'t shift pages.', '#/sd/walk/news-feed'],
+['SSR', ['SSR', 'CSR', 'server-side rendering', 'hydrate', 'hydration'], 'SSR renders HTML on the server for a fast first paint; the browser then "hydrates" it to make it interactive. CSR renders everything in the browser.', '#/sd/guide/frontend-framework'],
+['Core Web Vitals', ['LCP', 'INP', 'CLS', 'Core Web Vitals'], 'Google\'s UX metrics: LCP (load speed), INP (responsiveness), CLS (layout jumps).', '#/sd/guide/frontend-framework'],
+['Normalization', ['normalize', 'normalized', 'normalization'], 'Storing each entity once by id and referencing it, so one update shows everywhere.', '#/sd/guide/frontend-framework'],
+['Event loop', ['event loop', 'microtask', 'microtasks', 'macrotask'], 'How JS runs: sync code, then all promise callbacks (microtasks), then the next timer/event (macrotask).', '#/pattern/practical'],
+['AbortController', ['AbortController'], 'Lets you cancel a fetch, e.g. when a newer autocomplete request replaces an older one.', '#/sd/fe/fe-autocomplete']
+];
+
+
+var LEARN = [
+{ id: 'bigo', name: 'Big-O, explained simply', icon: 'O', body: `## TL;DR
+Big-O describes **how the work grows as the input grows**. It's not about seconds; it's about the shape of the growth.
+
+## The common ones, from fast to slow
+| Big-O | Name | Double the input → | Example |
+|---|---|---|---|
+| O(1) | constant | same work | read \`arr[5]\`, Map lookup |
+| O(log n) | logarithmic | one extra step | [binary search](#/pattern/binary-search) |
+| O(n) | linear | double the work | one loop over the array |
+| O(n log n) | "n log n" | a bit more than double | sorting |
+| O(n²) | quadratic | 4× the work | loop inside a loop over the same array |
+| O(2ⁿ) | exponential | squares it (roughly) | all subsets ([backtracking](#/pattern/backtracking)) |
+
+## How to figure it out
+- One loop over n items → O(n).
+- A loop inside a loop → O(n²) (or O(n·m) for two different sizes).
+- Halving the problem each step → O(log n).
+- Drop constants and smaller terms: O(2n + 5) is just O(n). Big-O is about the trend.
+
+## Space complexity
+Same idea for memory. A new array of size n is O(n) space. A few variables is O(1). Recursion uses stack space: O(depth).
+
+## Amortized
+Sometimes one operation is slow but rare. \`arr.push\` is usually instant, but occasionally the array has to grow and copy itself. Averaged over many pushes it's still O(1): that's "amortized O(1)".
+
+## In the interview
+Always say both: "This is O(n) time and O(n) space because of the hash map." Then mention if a trade is possible ("we could sort instead for O(1) extra space but O(n log n) time").
+
+More: [Big-O cheat sheet](#/more/bigo).` },
+{ id: 'ds', name: 'Data structures 101', icon: '[]', body: `## TL;DR
+Each data structure makes some operations cheap and others expensive. Picking the right one is half of most problems.
+
+## Array
+Items in a row. Grab any item by position instantly (O(1)). Adding/removing at the end is cheap; in the middle is O(n) because everything shifts. JS: \`[]\`.
+
+## Hash map (and set)
+Look up a value by key in O(1) on average. Under the hood, a [hash function](#/sd/concept/consistent-hashing) turns the key into a slot number. JS: \`new Map()\`, \`new Set()\` (a set is a map with only keys). Use whenever you think "have I seen this?" or "count these". Pattern: [Arrays & Hashing](#/pattern/hashing).
+
+## Stack
+Last in, first out, like a stack of plates. \`push\` and \`pop\` from the top, O(1). JS: an array with push/pop. Use for nesting (brackets), undo, and the [monotonic stack](#/pattern/stack) trick.
+
+## Queue
+First in, first out, like a line at a store. JS has no real queue: \`shift()\` is O(n), so use a head index or swap arrays. Use for [BFS](#/pattern/tree-bfs).
+
+## Linked list
+Nodes, each holding a value and a pointer to the next node. Inserting/removing next to a node you already have is O(1); finding the 50th item is O(n). Shows up in interviews more than real JS code. Pattern: [Linked lists](#/pattern/linked-list).
+
+## Tree
+Nodes with children, starting from a single **root**. A **binary tree** has at most 2 children per node (left, right). **Leaves** have no children. **Depth/height** = number of levels. Patterns: [DFS](#/pattern/tree-dfs), [BFS](#/pattern/tree-bfs).
+
+## Binary search tree (BST)
+A binary tree with a rule: everything in a node's left subtree is smaller, everything on the right is bigger. Searching is like binary search: O(log n) if the tree is balanced, O(n) if it's lopsided.
+
+## Heap
+A tree (stored in an array) that always keeps the smallest item (min-heap) or largest (max-heap) on top. Peek O(1), push/pop O(log n). Use for "top k" and "always grab the next best". JS doesn't have one built in. Pattern: [Heaps](#/pattern/heap).
+
+## Graph
+Things (nodes/vertices) connected by relationships (edges). Edges can be one-way (directed) or two-way, and can have weights (distances, costs). Usually stored as an **adjacency list**: a map from each node to its neighbors. Trees are a special kind of graph. Pattern: [Graphs](#/pattern/graphs).
+
+## Trie
+A tree where each step is one character, so all words sharing a prefix share a path. Fast prefix lookups for autocomplete. Pattern: [Tries](#/pattern/trie).
+
+## Quick picker
+| You need… | Use |
+|---|---|
+| "Seen it?" / counting | Map / Set |
+| Most recent unmatched thing | Stack |
+| Process in arrival order / shortest steps | Queue (BFS) |
+| Repeatedly the smallest/largest | Heap |
+| Sorted order + fast search | Sorted array + binary search, or BST |
+| Relationships / networks | Graph |
+| Prefix matching | Trie |` },
+{ id: 'recursion', name: 'Recursion, explained simply', icon: '↻', body: `## TL;DR
+A recursive function solves a problem by calling itself on a **smaller** version of the same problem, until it hits a version so small the answer is obvious (the **base case**).
+
+## The two parts
+\`\`\`js
+function sum(arr, i = 0) {
+  if (i === arr.length) return 0;        // base case: nothing left
+  return arr[i] + sum(arr, i + 1);       // recursive case: smaller problem
+}
+\`\`\`
+1. **Base case**: when to stop. Forget it and you recurse forever (stack overflow).
+2. **Recursive case**: do a little work, trust the recursive call to handle the rest.
+
+## The "trust" mindset
+Don't trace every call in your head. Assume the recursive call returns the right answer for the smaller input, then ask: "given that, how do I build my answer?" That's exactly how tree problems work: "assume I know the height of each child; my height is 1 + the bigger one." See [Trees: DFS](#/pattern/tree-dfs).
+
+## The call stack
+Each call waits for the one it made to finish. Those waiting calls pile up on the **call stack**. Depth 10,000 can overflow in JS (\`RangeError: Maximum call stack size exceeded\`). Fix: rewrite with your own stack/loop.
+
+## Recursion → memoization → DP
+Some recursions solve the same subproblem many times (Fibonacci). Store answers in a map the first time (**memoization**) and you've basically got [dynamic programming](#/pattern/dp-1d).
+
+## Where it shows up
+Trees, graphs ([DFS](#/pattern/graphs)), [backtracking](#/pattern/backtracking), divide and conquer (merge sort), DP.` },
+{ id: 'reading', name: 'How to spot the pattern', icon: '?', body: `## TL;DR
+Most interview problems are a known pattern in disguise. The wording gives it away if you know what to look for.
+
+## Clue → pattern
+| If the problem says… | Think |
+|---|---|
+| "pair that sums to", "seen before", "count" | [Hash map](#/pattern/hashing) |
+| sorted array, "pair/triplet", palindrome | [Two pointers](#/pattern/two-pointers) |
+| "longest/shortest substring/subarray" | [Sliding window](#/pattern/sliding-window) |
+| "subarray sum equals k", range sums | [Prefix sums](#/pattern/prefix) |
+| brackets, "next greater", undo | [Stack](#/pattern/stack) |
+| sorted + O(log n), "minimum X that works" | [Binary search](#/pattern/binary-search) |
+| "top k", "k-th largest", merge sorted lists | [Heap](#/pattern/heap) |
+| tree: depth, paths, validate | [Tree DFS](#/pattern/tree-dfs) |
+| tree: "level by level" | [Tree BFS](#/pattern/tree-bfs) |
+| grid, islands, "minimum steps", dependencies | [Graphs](#/pattern/graphs) |
+| "are these connected", merging groups | [Union-Find](#/pattern/union-find) |
+| "all combinations/permutations/subsets" | [Backtracking](#/pattern/backtracking) |
+| overlapping ranges, meetings | [Intervals](#/pattern/intervals) |
+| "how many ways", "min cost", choices that affect later | [DP](#/pattern/dp-1d) |
+| prefix search, autocomplete | [Trie](#/pattern/trie) |
+
+## Constraints are hints
+n ≤ 20 → exponential is fine (backtracking). n up to 10⁵–10⁶ → you need O(n) or O(n log n). See [Big-O](#/learn/bigo).
+
+Practice this with the [Pattern drill](#/drill/patterns).` }
+];
+
+
 var RUNTIME_SRC = "// Runs inside a Web Worker (and in node for self-tests). Defines helpers on the global scope.\nclass ListNode { constructor(val = 0, next = null) { this.val = val; this.next = next; } }\nclass TreeNode { constructor(val = 0, left = null, right = null) { this.val = val; this.left = left; this.right = right; } }\nfunction arrToList(arr) { const d = new ListNode(); let t = d; for (const v of arr || []) { t.next = new ListNode(v); t = t.next; } return d.next; }\nfunction listToArr(head) { const out = []; let n = head, guard = 0; while (n && guard++ < 100000) { out.push(n.val); n = n.next; } return out; }\nfunction arrToTree(arr) {\n  if (!arr || !arr.length || arr[0] === null) return null;\n  const root = new TreeNode(arr[0]); const q = [root]; let i = 1, h = 0;\n  while (h < q.length && i < arr.length) {\n    const n = q[h++];\n    if (i < arr.length && arr[i] !== null) { n.left = new TreeNode(arr[i]); q.push(n.left); } i++;\n    if (i < arr.length && arr[i] !== null) { n.right = new TreeNode(arr[i]); q.push(n.right); } i++;\n  }\n  return root;\n}\nfunction treeToArr(root) {\n  if (!root) return []; const out = [], q = [root]; let h = 0;\n  while (h < q.length) { const n = q[h++]; if (n) { out.push(n.val); q.push(n.left, n.right); } else out.push(null); }\n  while (out.length && out[out.length - 1] === null) out.pop();\n  return out;\n}\nclass MinHeap {\n  constructor(compare = (a, b) => a - b) { this.c = compare; this.a = []; }\n  size() { return this.a.length; }\n  peek() { return this.a[0]; }\n  push(x) { const a = this.a; a.push(x); let i = a.length - 1; while (i > 0) { const p = (i - 1) >> 1; if (this.c(a[i], a[p]) < 0) { [a[i], a[p]] = [a[p], a[i]]; i = p; } else break; } }\n  pop() {\n    const a = this.a; if (!a.length) return undefined; const top = a[0], last = a.pop();\n    if (a.length) { a[0] = last; let i = 0; for (;;) { const l = 2 * i + 1, r = l + 1; let m = i;\n      if (l < a.length && this.c(a[l], a[m]) < 0) m = l; if (r < a.length && this.c(a[r], a[m]) < 0) m = r;\n      if (m === i) break; [a[i], a[m]] = [a[m], a[i]]; i = m; } }\n    return top;\n  }\n}\nfunction __canon(x, mode) {\n  if (!Array.isArray(x)) return x;\n  let v = x;\n  if (mode === 'sortAll') v = v.map(e => Array.isArray(e) ? [...e].sort(__cmp) : e);\n  if (mode === 'sortAll' || mode === 'sortOuter') v = [...v].sort(__cmp);\n  return v;\n}\nfunction __cmp(a, b) { const x = JSON.stringify(a), y = JSON.stringify(b); return x < y ? -1 : x > y ? 1 : 0; }\nfunction __eq(a, b, mode) {\n  const ca = __canon(a, mode), cb = __canon(b, mode);\n  if (typeof ca === 'number' && typeof cb === 'number') return Math.abs(ca - cb) < 1e-6 || Object.is(ca, cb);\n  return JSON.stringify(ca) === JSON.stringify(cb);\n}\nfunction __fmt(v) { try { if (v === undefined) return 'undefined'; const s = JSON.stringify(v); return s.length > 400 ? s.slice(0, 400) + '…' : s; } catch (e) { return String(v); } }\nasync function __runTests(code, fnName, tests, harness, cmp) {\n  const results = [];\n  let target;\n  try {\n    target = new Function(code + '\\n;return (typeof ' + fnName + \" !== 'undefined') ? \" + fnName + ' : undefined;')();\n  } catch (e) { return { error: 'Compile error: ' + e.message, results }; }\n  if (typeof target !== 'function') return { error: 'Could not find `' + fnName + '`. Keep the function/class name as given.', results };\n  const h = harness ? new Function('return ' + harness)() : (f, args) => f(...args);\n  for (const [input, expected] of tests) {\n    const t0 = Date.now();\n    try {\n      const got = await h(target, JSON.parse(JSON.stringify(input)));\n      results.push({ input: __fmt(input), expected: __fmt(expected), got: __fmt(got), pass: __eq(got, expected, cmp), ms: Date.now() - t0 });\n    } catch (e) {\n      results.push({ input: __fmt(input), expected: __fmt(expected), got: (e && e.name ? e.name + ': ' : '') + (e && e.message ? e.message : String(e)), pass: false, ms: Date.now() - t0 });\n    }\n  }\n  return { results };\n}\n\n";
 (function () {
 'use strict';
@@ -3313,6 +4250,7 @@ function inline(s) {
   s = esc(s);
   const codes = [];
   s = s.replace(/`([^`]+)`/g, (_, c) => { codes.push(c); return '\u0000' + (codes.length - 1) + '\u0000'; });
+  s = s.replace(/\[([^\]]+)\]\((#[^)\s]+)\)/g, '<a class="xl" href="$2">$1</a>');
   s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
   s = s.replace(/(^|[\s(])_([^_]+)_(?=[\s.,)]|$)/g, '$1<em>$2</em>');
   s = s.replace(/\u0000(\d+)\u0000/g, (_, i) => '<code>' + codes[i] + '</code>');
@@ -3365,11 +4303,11 @@ const patById = Object.fromEntries(PAT.map(p => [p.id, p]));
 const probById = Object.fromEntries(P.map(p => [p.id, p]));
 const SD_SECTIONS = [
   { key: 'guide', title: 'Start here', items: SD_GUIDES },
-  { key: 'walk', title: 'Walkthroughs: backend / full-stack', items: SD_WALKS },
-  { key: 'fe', title: 'Walkthroughs: frontend system design', items: FE_WALKS },
-  { key: 'concept', title: 'Core concepts', items: SD_CONCEPTS },
+  { key: 'concept', title: 'Core concepts (read these first)', items: SD_CONCEPTS },
   { key: 'pattern', title: 'Common patterns', items: SD_PATTERNS },
   { key: 'tech', title: 'Key technologies', items: SD_TECH },
+  { key: 'walk', title: 'Walkthroughs: backend / full-stack', items: SD_WALKS },
+  { key: 'fe', title: 'Walkthroughs: frontend system design', items: FE_WALKS },
 ];
 const sdFind = (k, id) => { const s = SD_SECTIONS.find(x => x.key === k); return s && s.items.find(x => x.id === id); };
 const DIFF = { E: 'Easy', M: 'Medium', H: 'Hard' };
@@ -3391,6 +4329,55 @@ function runCode(p, code) {
     w.postMessage({ code, fn: p.fn, tests: p.tests, harness: p.harness, cmp: p.cmp });
   });
 }
+
+// ---------- glossary: tap-to-define ----------
+const G = GLOSSARY.map(([term, aliases, def, link], i) => ({ i, term, aliases, def, link }));
+const aliasMap = new Map();
+const pats = [];
+G.forEach(g => g.aliases.concat([g.term]).forEach(a => {
+  const forms = /[A-Z]/.test(a) ? [a] : [a, a[0].toUpperCase() + a.slice(1)];
+  forms.forEach(f => { if (!aliasMap.has(f)) { aliasMap.set(f, g); pats.push(f); } });
+}));
+pats.sort((a, b) => b.length - a.length);
+const reEsc = s => s.replace(/[.*+?^${}()|[\]\\\/]/g, '\\$&');
+const termRe = new RegExp('(?<![\\w-])(' + pats.map(reEsc).join('|') + ')(?![\\w-])', 'g');
+function linkTerms(root, used) {
+  const here = location.hash;
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+    acceptNode: n => n.parentElement.closest('a,code,pre,h1,h2,h3,h4,button,.term,.k,summary') ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT,
+  });
+  const nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode);
+  for (const node of nodes) {
+    const text = node.nodeValue; termRe.lastIndex = 0;
+    let m, last = 0, frag = null;
+    while ((m = termRe.exec(text))) {
+      const g = aliasMap.get(m[1]);
+      if (!g || used.has(g.i) || (g.link && (here === g.link || here.startsWith(g.link + '/')))) continue;
+      used.add(g.i);
+      frag = frag || document.createDocumentFragment();
+      frag.appendChild(document.createTextNode(text.slice(last, m.index)));
+      const b = document.createElement('button'); b.className = 'term'; b.dataset.g = g.i; b.textContent = m[1];
+      frag.appendChild(b); last = m.index + m[1].length;
+    }
+    if (frag) { frag.appendChild(document.createTextNode(text.slice(last))); node.parentNode.replaceChild(frag, node); }
+  }
+}
+function showTerm(i) {
+  const g = G[i];
+  const here = location.hash;
+  const sheet = document.createElement('div');
+  sheet.className = 'sheet-wrap';
+  sheet.innerHTML = `<div class="sheet" role="dialog" aria-label="${esc(g.term)}"><div class="grab"></div><div class="k">Quick definition</div><h3>${esc(g.term)}</h3><p>${inline(g.def)}</p>
+    <div class="edbtns">${g.link && g.link !== here ? `<a class="btn" href="${g.link}">Read more ›</a>` : ''}<button class="btn ghost" data-close>Close</button></div></div>`;
+  document.body.appendChild(sheet);
+  requestAnimationFrame(() => sheet.classList.add('open'));
+  const close = () => { sheet.classList.remove('open'); setTimeout(() => sheet.remove(), 200); };
+  sheet.addEventListener('click', e => { if (e.target === sheet || e.target.closest('[data-close]') || e.target.closest('a')) close(); });
+}
+document.addEventListener('click', e => { const t = e.target.closest('.term'); if (t) { e.preventDefault(); showTerm(+t.dataset.g); } });
+function enhance() { const used = new Set(); document.querySelectorAll('#app .prose, #app .signals, #app .card p, #app .card.hint').forEach(el => linkTerms(el, used)); }
+let enhanceQueued = false;
+new MutationObserver(() => { if (enhanceQueued) return; enhanceQueued = true; queueMicrotask(() => { enhanceQueued = false; enhance(); }); }).observe(document.getElementById('app'), { childList: true });
 
 // ---------- views ----------
 const app = $('#app');
@@ -3433,6 +4420,9 @@ function viewHome() {
     <a class="tile" href="#/more/howto"><span>🗣️</span>How to run a coding round</a>
     <a class="tile" href="#/more/bigo"><span>📈</span>Big-O cheat sheet</a>
     <a class="tile" href="#/more/phone-tips"><span>✈️</span>Using this on a plane</a>
+    <a class="tile" href="#/sd/concept/request-path"><span>🌐</span>System design basics</a>
+    <a class="tile" href="#/learn/ds"><span>🧱</span>Data structures 101</a>
+    <a class="tile" href="#/glossary"><span>📖</span>Glossary</a>
   </div>
   <h2 class="sec">Tuned for your pipeline</h2>
   <div class="list">
@@ -3447,7 +4437,10 @@ function viewHome() {
 
 function viewPatterns() {
   setTitle('Patterns', null); tabActive('patterns');
-  app.innerHTML = `<p class="lede">Learn the pattern first, then do its problems. Each guide covers the signals that tell you to use it, a template, and the pitfalls.</p>
+  app.innerHTML = `<p class="lede">New to a term? Tap any <span class="term-demo">underlined word</span> for a quick definition.</p>
+  <h2 class="sec">Foundations</h2>
+  <div class="list">${LEARN.map(l => `<a class="row" href="#/learn/${l.id}"><span class="ic">${esc(l.icon)}</span><div><div class="t">${esc(l.name)} ${S.read['learn:' + l.id] ? '<em class="ok">✓</em>' : ''}</div></div><i>›</i></a>`).join('')}</div>
+  <h2 class="sec">Patterns</h2>
   <div class="list">${PAT.map(pt => {
     const ps = P.filter(p => p.p === pt.id);
     return `<a class="row" href="#/pattern/${pt.id}"><span class="ic">${esc(pt.icon)}</span><div><div class="t">${esc(pt.name)} ${S.read['pat:' + pt.id] ? '<em class="ok">✓</em>' : ''}</div><div class="s">${countSolved(ps)}/${ps.length} solved</div></div><i>›</i></a>`;
@@ -3469,6 +4462,29 @@ function viewPattern(id) {
 function probRow(p) {
   const st = S.solved[p.id] ? '<em class="ok">✓</em>' : S.attempted[p.id] ? '<em class="try">•</em>' : '';
   return `<a class="row" href="#/problem/${p.id}"><span class="d d${p.d}">${p.d}</span><div><div class="t">${esc(p.t)} ${st} ${S.star[p.id] ? '★' : ''}</div><div class="s">${esc(patById[p.p].name)}</div></div><i>›</i></a>`;
+}
+
+function viewLearn(id) {
+  const l = LEARN.find(x => x.id === id); if (!l) return viewPatterns();
+  setTitle(l.name, '#/patterns'); tabActive('patterns');
+  const k = 'learn:' + id;
+  app.innerHTML = `<article class="prose">${md(l.body)}</article>
+  <button class="btn wide ${S.read[k] ? 'ghost' : ''}" id="markread">${S.read[k] ? '✓ Marked as read' : 'Mark as read'}</button>`;
+  $('#markread').onclick = () => { if (S.read[k]) delete S.read[k]; else S.read[k] = Date.now(); save(); viewLearn(id); };
+}
+
+let gq = '';
+function viewGlossary() {
+  setTitle('Glossary', '#/drill'); tabActive('drill');
+  app.innerHTML = `<div class="filters"><input id="gq" type="search" placeholder="Search ${G.length} terms" value="${esc(gq)}" autocomplete="off" autocorrect="off" autocapitalize="off"></div><div id="glist"></div>`;
+  const render = () => {
+    const q = gq.toLowerCase();
+    const list = G.filter(g => !q || g.term.toLowerCase().includes(q) || g.aliases.some(a => a.toLowerCase().includes(q)) || g.def.toLowerCase().includes(q))
+      .sort((a, b) => a.term.localeCompare(b.term));
+    $('#glist').innerHTML = list.length ? `<div class="list">${list.map(g => `<div class="row gl"><div><div class="t">${esc(g.term)}</div><div class="s">${inline(g.def)}</div>${g.link ? `<a class="xl" href="${g.link}">Read more ›</a>` : ''}</div></div>`).join('')}</div>` : '<p class="empty">No matches.</p>';
+  };
+  $('#gq').oninput = e => { gq = e.target.value; render(); };
+  render();
 }
 
 let probFilter = { q: '', d: '', st: '' };
@@ -3606,13 +4622,20 @@ function viewDesign() {
       `<a class="row" href="#/sd/${s.key}/${it.id}"><div><div class="t">${esc(it.name)} ${S.read[s.key + ':' + it.id] ? '<em class="ok">✓</em>' : ''}</div>${it.tags ? `<div class="s">${it.tags.map(esc).join(' · ')}</div>` : ''}</div><i>›</i></a>`).join('')}</div>`).join('');
 }
 
+const TAG2 = { caching: ['concept', 'caching'], ids: ['concept', 'databases'], reads: ['pattern', 'p-reads'], contention: ['pattern', 'p-contention'], consistency: ['concept', 'consistency'], search: ['concept', 'search'], spikes: ['concept', 'queues'], 'fan-out': ['pattern', 'p-reads'], pagination: ['concept', 'databases'], websockets: ['concept', 'realtime'], 'real-time': ['pattern', 'p-realtime'], delivery: ['concept', 'idempotency'], redis: ['tech', 'redis'], algorithms: ['concept', 'scaling'], gateway: ['tech', 'gateway'], streaming: ['tech', 'flink'], kafka: ['tech', 'kafka'], flink: ['tech', 'flink'], olap: ['pattern', 'p-writes'], sse: ['concept', 'realtime'], geo: ['concept', 'search'], blobs: ['concept', 'blobs'], sync: ['pattern', 'p-blobs'], presigned: ['concept', 'blobs'], cdn: ['tech', 's3cdn'], transcoding: ['pattern', 'p-longtasks'], queues: ['concept', 'queues'], idempotency: ['concept', 'idempotency'], trie: ['pattern-dsa', 'trie'], frontend: ['guide', 'frontend-framework'], politeness: ['concept', 'queues'], dedupe: ['concept', 'idempotency'], auth: ['concept', 'auth'], security: ['concept', 'auth'], sagas: ['pattern', 'p-multistep'], llm: ['pattern', 'p-longtasks'], retrieval: ['concept', 'search'], evals: ['concept', 'observability'], virtualization: ['guide', 'frontend-framework'], optimistic: ['guide', 'frontend-framework'], debounce: ['pattern-dsa', 'practical'], a11y: ['guide', 'frontend-framework'], offline: ['concept', 'idempotency'], ordering: ['concept', 'queues'] };
+function relatedFor(it) {
+  const seen = new Set(), out = [];
+  (it.tags || []).forEach(t => { const r = TAG2[t]; if (!r) return; const href = r[0] === 'pattern-dsa' ? '#/pattern/' + r[1] : '#/sd/' + r[0] + '/' + r[1]; if (seen.has(href)) return; seen.add(href);
+    const item = r[0] === 'pattern-dsa' ? patById[r[1]] : sdFind(r[0], r[1]); if (item) out.push(`<a class="row" href="${href}"><div><div class="t">${esc(item.name)}</div></div><i>›</i></a>`); });
+  return out.length ? `<h2 class="sec">Brush up on the concepts used here</h2><div class="list">${out.join('')}</div>` : '';
+}
 function viewSD(kind, id) {
   const it = sdFind(kind, id); if (!it) return viewDesign();
   setTitle(it.name, '#/design'); tabActive('design');
   const k = kind + ':' + id;
   const isWalk = kind === 'walk' || kind === 'fe';
   app.innerHTML = (isWalk ? `<div class="card"><div class="k">Practice mode</div><p>Read the requirements, then stop and sketch your own entities, API and high-level design (paper, notes app or your head) before reading further.</p></div>` : '') +
-    `<article class="prose">${md(it.body)}</article>
+    `<article class="prose">${md(it.body)}</article>${isWalk ? relatedFor(it) : ''}
     <button class="btn wide ${S.read[k] ? 'ghost' : ''}" id="markread">${S.read[k] ? '✓ Marked as read' : 'Mark as read'}</button>`;
   $('#markread').onclick = () => { if (S.read[k]) delete S.read[k]; else S.read[k] = Date.now(); save(); viewSD(kind, id); };
 }
@@ -3624,7 +4647,7 @@ function viewDrill() {
   <a class="card link" href="#/drill/patterns"><div class="k">🎯 Pattern drill</div><div class="t">Which pattern solves this?</div><div class="s">Read a problem, pick the pattern. Score: ${S.drill.right}/${S.drill.total}</div></a>
   <a class="card link" href="#/drill/cards"><div class="k">🃏 Flashcards</div><div class="t">${CARDS.length} cards: DSA, JS, system design, frontend</div><div class="s">${known} marked as known</div></a>
   <h2 class="sec">Cheat sheets</h2>
-  <div class="list">${CHEATS.map(c => `<a class="row" href="#/more/${c.id}"><div><div class="t">${esc(c.name)}</div></div><i>›</i></a>`).join('')}
+  <div class="list"><a class="row" href="#/glossary"><div><div class="t">📖 Glossary</div><div class="s">${G.length} terms in plain English</div></div><i>›</i></a>${CHEATS.map(c => `<a class="row" href="#/more/${c.id}"><div><div class="t">${esc(c.name)}</div></div><i>›</i></a>`).join('')}
   <a class="row" href="#/settings"><div><div class="t">Settings & progress</div><div class="s">Reset progress, offline status</div></div><i>›</i></a></div>`;
 }
 
@@ -3709,7 +4732,8 @@ async function updateOfflinePill() {
 }
 
 // ---------- router ----------
-function route() {
+function route() { routeInner(); }
+function routeInner() {
   const h = location.hash.replace(/^#\/?/, '');
   const [a, b, c] = h.split('/');
   window.scrollTo(0, 0);
@@ -3725,13 +4749,21 @@ function route() {
   if (a === 'drill') return viewDrill();
   if (a === 'more') return viewCheat(b);
   if (a === 'settings') return viewSettings();
+  if (a === 'learn') return viewLearn(b);
+  if (a === 'glossary') return viewGlossary();
   viewHome();
 }
 window.addEventListener('hashchange', route);
 route();
 
 if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+  const hadController = !!navigator.serviceWorker.controller;
   navigator.serviceWorker.register('./sw.js').then(() => navigator.serviceWorker.ready).then(updateOfflinePill).catch(() => {});
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (!hadController || document.querySelector('.update-bar')) return;
+    const bar = document.createElement('button'); bar.className = 'update-bar'; bar.textContent = 'New version downloaded. Tap to reload.';
+    bar.onclick = () => location.reload(); document.body.appendChild(bar);
+  });
 }
 })();
 
