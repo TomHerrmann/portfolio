@@ -9,8 +9,8 @@ export const intro =
 export const metrics = [
   { value: '9', label: 'Sub-apps moved to a micro-frontend architecture' },
   { value: '4', label: 'Teams given independent deployment cycles' },
-  { value: '20+', label: 'Engineers onboarded via the "Golden Path" playbook' },
-  { value: '0', label: 'Unintentional cross-team rollbacks after the micro-frontend split' },
+  { value: '20+', label: 'Engineers adopting the AI-assisted migration workflow' },
+  { value: '0', label: 'Cross-team rollbacks after the Module Federation split' },
 ];
 
 export const contact = {
@@ -27,8 +27,10 @@ export const skills = [
   'RAG',
   'LLM evals',
   'Context engineering',
+  'LangGraph',
   'MCP',
   ...resumeData.skills.tools.split(',').map((s) => s.trim()),
+  ...resumeData.skills.testing.split(',').map((s) => s.trim()),
 ];
 
 export const zvcStack = ['Next.js', 'Payload CMS', 'Postgres', 'Stripe', 'Claude', 'QStash', 'Resend', 'Vercel', 'Python', 'DaVinci Resolve'];

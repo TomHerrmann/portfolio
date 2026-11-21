@@ -94,7 +94,7 @@ export default function ResumePage() {
       </header>
 
       <Section title="Technical Skills">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <h4 className="font-utility uppercase text-xs tracking-[0.15em] text-blue-light mb-2">
               Languages & Frameworks
@@ -109,9 +109,15 @@ export default function ResumePage() {
           </div>
           <div>
             <h4 className="font-utility uppercase text-xs tracking-[0.15em] text-blue-light mb-2">
-              Cloud & Tools
+              Cloud & Infrastructure
             </h4>
             <p className="text-lg text-glow/80">{resumeData.skills.tools}</p>
+          </div>
+          <div>
+            <h4 className="font-utility uppercase text-xs tracking-[0.15em] text-blue-light mb-2">
+              Testing & UI
+            </h4>
+            <p className="text-lg text-glow/80">{resumeData.skills.testing}</p>
           </div>
         </div>
       </Section>
