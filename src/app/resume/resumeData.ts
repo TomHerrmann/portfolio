@@ -3,7 +3,7 @@ export const resumeData = {
     name: 'Thomas Herrmann',
     title: 'Senior Software Engineer | Full-Stack & AI',
     summary:
-      'Senior software engineer (ex-Bloomberg, ex-Meta) building full-stack web apps and human-in-the-loop (HITL) multi-agent LLM systems.',
+      'Senior software engineer (ex-Bloomberg, ex-Meta) and technical lead who architects full-stack systems and human-in-the-loop multi-agent LLM products (LangGraph, MCP, RAG, LLM evals). Led an AI-assisted migration workflow adopted by 20+ engineers; founded Bloomberg’s Web App Security Guild.',
     location: 'New York City',
     phone: '631-681-3233',
     email: 'tomherrmannd@gmail.com',
@@ -11,11 +11,13 @@ export const resumeData = {
   },
   skills: {
     languages:
-      'JavaScript/TypeScript, React, Next.js, Python, GraphQL, React Query, Redux, Node.js, Express.js, PHP, SQL',
+      'JavaScript/TypeScript, React, Next.js, Python, GraphQL, REST, Redux, Node.js, Express.js, PHP/Hack, SQL',
     ai:
-      'Multi-agent orchestration (Anthropic Claude, OpenAI APIs), agent harnesses, tool calling, structured outputs, RAG (pgvector), LLM evals, prompt and context engineering, MCP, human-in-the-loop (HITL)',
+      'Multi-agent orchestration (Claude & OpenAI APIs), LangGraph, MCP, prompt & context engineering, RAG, LLM evals',
     tools:
-      'AWS, Kubernetes, Docker, Redis, Postgres, Vercel, Stripe, Jenkins (CI/CD), Jest/React Testing Library, CSS/Tailwind/Styled-Components',
+      'AWS, Docker, Kubernetes, Redis, Postgres, Vercel, Stripe, Jenkins (CI/CD), Module Federation, Webpack',
+    testing:
+      'Jest/React Testing Library, pytest, A/B testing, accessibility (WCAG), CSS/Tailwind',
   },
   experience: [
     {
@@ -23,12 +25,13 @@ export const resumeData = {
       title: 'Senior Software Engineer',
       dates: '2023-2026',
       bullets: [
-        'Spearheaded the design and execution of a centralized secure attachment system, mitigating a critical unauthorized access risk for legal contracts across the Bloomberg ecosystem.',
-        'Engineered a custom RBAC and audit logging layer to ensure regulatory compliance, transitioning the organization from open internal access to a strictly governed, "least-privileged" read/write model.',
-        'Built a micro-frontend architecture for the contracts portal (9 sub-apps), a scalable system design that decoupled deployments for 4 teams and eliminated unintentional cross-team rollbacks.',
-        'Established the "Golden Path" migration playbook and an AI-assisted workflow (prompt engineering, shared Cursor rules, skill files, review checkpoints), enabling 20+ engineers across 4 teams to migrate 9 sub-apps from a monorepo to micro-frontends.',
-        'Founded and chaired the Web Application Security Guild, establishing the organization-wide "Web App Security Best Practices" and evangelized these strategies across the firm through technical presentations.',
-        'Operationalized a security on-call rotation, providing proactive code audits and vulnerability assessments to standardize security posture across all web properties.',
+        'Designed and rolled out an AI-assisted migration workflow (shared Cursor rules, skill files, human-in-the-loop PR review) that cut each migration from 1 month to 1 week, adopted by all 4 teams (20+ engineers) to move 9 sub-apps to micro-frontends.',
+        'Automated module decoupling, test writing, the React Query migration and PR creation for human review, using reusable repo-level skill files that enforce 80%+ test coverage, PII compliance and query caching strategies.',
+        'Architected Module Federation for the contracts portal (9 sub-apps), decoupling deployments for 4 teams and ending cross-team rollbacks.',
+        'Engineered backend RBAC and audit logging middleware for regulatory compliance, moving the org from open access to least-privilege.',
+        'Led design and execution of a centralized secure attachment backend service, closing a critical unauthorized access risk for legal contracts.',
+        'Developed the runtime environment and infrastructure for the Chromium-based Terminal browser, supporting 10,000+ unique applications for 325,000+ subscribers, and migrated it to a multi-process model, improving reliability, efficiency and security.',
+        'Founded and chaired the Web Application Security Guild, authored the firm-wide “Web App Security Best Practices,” and ran a security on-call rotation for code audits and vulnerability assessments.',
         'Served as the technical lead for web development, setting best practices, advocating for new technologies, and authoring documentation.',
       ],
     },
@@ -37,11 +40,11 @@ export const resumeData = {
       title: 'Software Engineer - E4',
       dates: '2022-2023',
       bullets: [
-        'Led integration of Spec Doctor functionality from a CLI into the SafeChange Console dashboard, enhancing usability and improving workflow.',
-        'Spearheaded migration from PHP/Hack to React/GraphQL, significantly improving application performance and developer experience (devX).',
-        'Founded Configuration Products UX group to build a component library, promoting consistency and fast development across internal apps.',
-        'Optimized C++ and Python API endpoints, drastically improving data querying efficiency for internal dashboards.',
-        'Collaborated directly with product customers to gather requirements, define features, and resolve technical issues.',
+        'Owned the SafeChange Console, a dashboard for creating, updating, and monitoring canaries; led integration of Spec Doctor from a CLI.',
+        'Spearheaded migration from PHP/Hack to React/GraphQL, improving application performance and developer experience.',
+        'Founded Configuration Products UX group to build a design system and component library, promoting consistency across internal apps.',
+        'Optimized C++ and Python API endpoints, improving data querying efficiency for internal dashboards.',
+        'Collaborated with product customers to gather requirements, define features and resolve technical issues; served in the on-call rotation.',
         'Mentored and trained new engineers, including bootcamp and intern hires, fostering a culture of knowledge-sharing and growth.',
       ],
     },
@@ -50,10 +53,8 @@ export const resumeData = {
       title: 'Software Engineer - Rotational',
       dates: '2021-2022',
       bullets: [
-        'Facilitated project updates by creating a multi-selection feature with persistent state for search results, streamlining the user workflow.',
-        'Developed a PHP/Hack script to securely enable cross-platform posting from email to Workplace via a customized Chronos job.',
-        'Crafted a breadcrumbs component for seamless user navigation through projects within the Unigraph dashboard.',
-        'Contributed to the design and development of the modernized Unigraph dashboard and its UI components.',
+        'Built breadcrumbs navigation and a multi-selection feature with persistent state for search results in the modernized Unigraph dashboard.',
+        'Developed a scheduled backend job (PHP/Hack, Chronos) that securely ingests email and posts it to Workplace.',
       ],
     },
     {
@@ -61,9 +62,8 @@ export const resumeData = {
       title: 'Software Engineer',
       dates: '2020-2021',
       bullets: [
-        'Architected an internal reporting suite allowing sales teams to rapidly view report data, accelerating workflows and increasing sales.',
+        'Architected an internal reporting suite allowing sales teams to rapidly view ad campaign report data, accelerating sales workflows.',
         'Developed a library centralizing common components and boosting development efficiency across engineering teams.',
-        'Defined unit tests with Jest and React Testing Library, focusing on a lightweight, user-centric testing structure.',
       ],
     },
     {
@@ -72,7 +72,6 @@ export const resumeData = {
       dates: '2019-2020',
       bullets: [
         'Engineered GraphQL prototyping functionality to dynamically generate schemas and resolvers from databases and REST APIs.',
-        'Configured exportable Apollo Servers with GraphQL Playground for developers to test data graphs.',
         'Managed a team of four engineers, leading daily standups and project management using agile methodology.',
       ],
     },
@@ -83,9 +82,10 @@ export const resumeData = {
       url: 'zerovisioncinema.com',
       dates: '2025-Present',
       bullets: [
-        'Built and scaled a production ticketing platform for a NYC film community, processing 1k+ orders (Next.js, Payload CMS, Postgres, Stripe) with idempotent webhook fulfillment, queued retries and order recovery.',
-        'Architected a multi-agent pipeline (orchestrator, Claude Haiku drafters, independent verifier agents) that launches each event to Partiful, calendar and Linear, with human approval required before anything publishes.',
-        'Built a grounded research agent (cites only sources it fetched) that emails the team a daily brief on film news and press screenings.',
+        'Shipped a production ticketing platform processing thousands of payments with idempotent webhooks, queued retries and order recovery.',
+        'Architected a multi-agent pipeline (Claude drafters, verifier agents) that publishes each event to external platforms with human approval.',
+        'Designed a LangGraph agent that triages inquiries and executes end-to-end ticket refunds by interfacing with Stripe and headless CMS APIs.',
+        'Launched a grounded research agent (cites only sources it fetched) that emails the team a daily brief on film news and press screenings.',
       ],
     },
     {
@@ -93,9 +93,8 @@ export const resumeData = {
       stack: 'Python, Claude API, DaVinci Resolve',
       dates: 'June 2026-Present',
       bullets: [
-        'Built an agentic video-editing harness in which Claude drives DaVinci Resolve via tool calls, assembling multi-platform cuts from Pydantic structured outputs.',
-        'Built a RAG pipeline over video transcripts (pgvector embeddings) that retrieves key moments to select clips and write grounded per-platform social copy.',
-        'Created a subtitle review agent that proofreads AI captions and flags unverifiable words for a human in the loop, backed by an eval set and a test harness against a mocked Resolve.',
+        'Built Cutroom, an agentic video editor where Claude drives DaVinci Resolve via tool calls and Pydantic structured outputs.',
+        "Engineered Cutroom's transcript RAG (pgvector) to pick clips and write grounded copy, plus a subtitle review agent with an eval set.",
       ],
     },
   ],
@@ -130,6 +129,7 @@ export type Skills = {
   languages: string;
   ai: string;
   tools: string;
+  testing: string;
 };
 
 export type Experience = {
